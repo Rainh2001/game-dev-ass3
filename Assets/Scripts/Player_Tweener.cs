@@ -6,6 +6,7 @@ public class Player_Tweener : MonoBehaviour
 {
 
     private Tween activeTween;
+    private Animator animator;
 
     private float xDistance = 6.4f;
     
@@ -16,6 +17,9 @@ public class Player_Tweener : MonoBehaviour
 
     void Awake()
     {
+
+        animator = gameObject.GetComponent<Animator>();
+
         Vector3 destination = new Vector3(transform.position.x + xDistance, transform.position.y, transform.position.z);
         activeTween = new Tween(transform, transform.position, destination, Time.time, xDistance/speed);
     }
@@ -60,6 +64,7 @@ public class Player_Tweener : MonoBehaviour
                     break;
             }
 
+            animator.SetTrigger("Rotate");
             activeTween = new Tween(transform, transform.position, destination, Time.time, duration);
 
         }
