@@ -28,6 +28,7 @@ public class AudioManager : MonoBehaviour
         
         if(!audioSource.isPlaying){
             audioSource.clip = backgroundNormal;
+            audioSource.volume = 0.5f;
             audioSource.loop = true;
             audioSource.Play();
         }
