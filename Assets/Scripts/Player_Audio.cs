@@ -10,6 +10,9 @@ public class Player_Audio : MonoBehaviour
     void Awake(){
         audioSource.clip = movingNoEating;
         audioSource.loop = true;
+    }
+
+    void Start(){
         audioSource.Play();
     }
 
