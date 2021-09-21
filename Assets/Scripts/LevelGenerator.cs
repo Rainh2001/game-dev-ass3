@@ -93,17 +93,29 @@ public class LevelGenerator : MonoBehaviour
         for(int i = 0; i < map.Count; i++){
             for(int j = 0; j < map[i].Count; j++){
 
+                int tileNum = map[i][j];
+                if(tileNum == 0) continue;
+
+                // Get the actual tile GameObject
+                GameObject tile = getTile(tileNum);
+                
+
                 // Based on position in the matrix, figure out the correct positioning for the tile
                 Vector3 position = getPosition(size, i, j);
-                GameObject tile = getTile(map[i][j]);
 
-                if(tile != null) Instantiate(tile, position, Quaternion.identity);
+
+                // Analyze horizontal and vertical adjacent tiles in the list to figure out rotation
+                Quaternion rotation = Quaternion.identity;
+
+
+                // Instantiate the tile at the given position with the calculate rotation
+                Instantiate(tile, position, rotation, transform);
 
             }
         }
 
         // Instantiate the Player at the map[1][1] position (just inside from the top-left corner)
-        Instantiate(player, getPosition(size, 1, 1), Quaternion.identity);
+        Instantiate(player, getPosition(size, 1, 1), Quaternion.identity, transform);
 
     }
 

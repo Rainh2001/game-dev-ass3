@@ -8,15 +8,18 @@ public class Player_Tweener : MonoBehaviour
     private Tween activeTween;
     private Animator animator;
 
-    private float xDistance = 6.4f;
+    private float xDistance;
     
-    private float yDistance = 5.12f;
+    private float yDistance;
     private float speed = 3.55f;
     private int tweenCount = 0;
 
 
     void Awake()
     {
+        float size = gameObject.GetComponent<SpriteRenderer>().bounds.size.x;
+        xDistance = size * 5;
+        yDistance = size * 4;
 
         animator = gameObject.GetComponent<Animator>();
 
