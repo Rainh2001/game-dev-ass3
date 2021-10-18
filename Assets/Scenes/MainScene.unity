@@ -13830,6 +13830,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tile_Outside-Corner
       objectReference: {fileID: 0}
+    - target: {fileID: 8241514752309452863, guid: 7ee6021fb2631e544bf398c732ecd910, type: 3}
+      propertyPath: m_TagString
+      value: FirstTile
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7ee6021fb2631e544bf398c732ecd910, type: 3}
 --- !u!1001 &679197854
@@ -22550,8 +22554,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 8010119943144152433, guid: 26e7dece4e42dbf4189c53b795b82737, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 26e7dece4e42dbf4189c53b795b82737, type: 3}
 --- !u!1001 &1230342757
 PrefabInstance:
@@ -22895,6 +22898,49 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 146c0b20b36f20344ad8a84a9fa255d4, type: 3}
+--- !u!1 &1236761410
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1236761412}
+  - component: {fileID: 1236761411}
+  m_Layer: 0
+  m_Name: MapManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1236761411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1236761410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1e92d120e65b1e4bb232453e2676377, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1236761412
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1236761410}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.3595381, y: -3.1050482, z: -18.028791}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 666
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1238637246
 PrefabInstance:
   m_ObjectHideFlags: 0
