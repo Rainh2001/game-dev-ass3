@@ -15,9 +15,16 @@ public class PacStudentController : MonoBehaviour
     private bool initialized = false;
 
     private Animator animator;
+    private AudioSource audioSource;
+    public AudioClip movingNoEating;
+    public AudioClip movingAndEating;
 
     void Awake(){
         animator = gameObject.GetComponent<Animator>();
+        audioSource = gameObject.GetComponent<AudioSource>();
+        audioSource.Stop();
+        audioSource.loop = true;
+        audioSource.clip = movingNoEating;
         animator.enabled = false;
     }
 
@@ -58,6 +65,17 @@ public class PacStudentController : MonoBehaviour
             }
 
             if(MapManager.isValidPosition(newX, newY)){
+
+                if(MapManager.isPellet(newX, newY)){
+                    audioSource.clip = movingAndEating;
+                } else {
+                    audioSource.clip = movingNoEating;
+                }
+
+                if(!audioSource.isPlaying){
+                    audioSource.Play();
+                }
+
                 if(!playing){
                     animator.enabled = true;
                 }
@@ -79,6 +97,16 @@ public class PacStudentController : MonoBehaviour
                 }
 
                 if(MapManager.isValidPosition(newX, newY)){
+                    if(MapManager.isPellet(newX, newY)){
+                        audioSource.clip = movingAndEating;
+                    } else {
+                        audioSource.clip = movingNoEating;
+                    }
+
+                    if(!audioSource.isPlaying){
+                        audioSource.Play();
+                    }
+
                     if(!playing){
                         animator.enabled = true;
                     }
@@ -92,6 +120,7 @@ public class PacStudentController : MonoBehaviour
 
             if(!playing){
                 animator.enabled = false;
+                audioSource.Stop();
             }
         }
     }

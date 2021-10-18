@@ -22494,6 +22494,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1627437927, guid: 26e7dece4e42dbf4189c53b795b82737, type: 3}
+      propertyPath: movingNoEating
+      value: 
+      objectReference: {fileID: 8300000, guid: f00065ff91d0bc54191120c60eee40ac, type: 3}
+    - target: {fileID: 1627437927, guid: 26e7dece4e42dbf4189c53b795b82737, type: 3}
+      propertyPath: movingAndEating
+      value: 
+      objectReference: {fileID: 8300000, guid: 354e1403e5827104085e46469745f251, type: 3}
     - target: {fileID: 8010119943144152426, guid: 26e7dece4e42dbf4189c53b795b82737, type: 3}
       propertyPath: m_Name
       value: Player
@@ -22542,7 +22550,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8010119943144152430, guid: 26e7dece4e42dbf4189c53b795b82737, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 26e7dece4e42dbf4189c53b795b82737, type: 3}
 --- !u!1001 &1230342757
 PrefabInstance:

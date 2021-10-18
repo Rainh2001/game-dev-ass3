@@ -72,4 +72,12 @@ public class MapManager : MonoBehaviour
 
         return true;
     }
+
+    public static bool isPellet(int x, int y){
+        int tile = map[y][x];
+
+        if(tile == 0) return false;
+
+        return true;
+    }
 }
