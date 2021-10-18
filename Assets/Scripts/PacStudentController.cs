@@ -18,6 +18,7 @@ public class PacStudentController : MonoBehaviour
 
     void Awake(){
         animator = gameObject.GetComponent<Animator>();
+        animator.enabled = false;
     }
 
     // Start is called before the first frame update
@@ -57,6 +58,9 @@ public class PacStudentController : MonoBehaviour
             }
 
             if(MapManager.isValidPosition(newX, newY)){
+                if(!playing){
+                    animator.enabled = true;
+                }
                 currentInput = lastInput;
                 posX = newX;
                 posY = newY;
@@ -75,12 +79,19 @@ public class PacStudentController : MonoBehaviour
                 }
 
                 if(MapManager.isValidPosition(newX, newY)){
+                    if(!playing){
+                        animator.enabled = true;
+                    }
                     posX = newX;
                     posY = newY;
                     animator.SetInteger("direction", direction);
                     StartCoroutine(MoveToSpot(MapManager.getPosition(newX, newY)));
                     playing = true;
                 }
+            }
+
+            if(!playing){
+                animator.enabled = false;
             }
         }
     }
