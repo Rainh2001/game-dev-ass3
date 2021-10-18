@@ -10,7 +10,7 @@ public class Grape_Spawner : MonoBehaviour
     public GameObject grape;
 
     void Awake(){
-        StartCoroutine(SpawnGrape());
+        StartCoroutine(SpawnGrapes());
     }
 
     // Start is called before the first frame update
@@ -25,7 +25,7 @@ public class Grape_Spawner : MonoBehaviour
         
     }
 
-    IEnumerator SpawnGrape() {
+    IEnumerator SpawnGrapes() {
 
         for(int i = 0; i < grapeCount; i++){
             yield return new WaitForSeconds(0.25f);

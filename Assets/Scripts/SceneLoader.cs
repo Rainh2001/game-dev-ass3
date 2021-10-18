@@ -10,7 +10,7 @@ public class SceneLoader : MonoBehaviour
     private Button button;
 
     void Awake(){
-        DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(this);
     }
 
     // Start is called before the first frame update

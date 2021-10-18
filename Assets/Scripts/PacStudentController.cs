@@ -10,12 +10,14 @@ public class PacStudentController : MonoBehaviour
 
     private KeyCode currentInput;
     private KeyCode lastInput;
-    private float speed = 6.0f;
+    private float speed = 5.0f;
     private bool tweening = false;
     private bool initialized = false;
 
+    private Animator animator;
+
     void Awake(){
-        
+        animator = gameObject.GetComponent<Animator>();
     }
 
     // Start is called before the first frame update
@@ -42,36 +44,42 @@ public class PacStudentController : MonoBehaviour
         }
 
         if(!tweening && initialized){
+            bool playing = false;
             int newX = posX;
             int newY = posY;
+            int direction = 0;
 
             switch(lastInput){
-                case KeyCode.W: newY -= 1; break;
-                case KeyCode.A: newX -= 1; break;
-                case KeyCode.S: newY += 1; break;
-                case KeyCode.D: newX += 1; break;
+                case KeyCode.W: newY -= 1; direction = 0; break;
+                case KeyCode.A: newX -= 1; direction = 3; break;
+                case KeyCode.S: newY += 1; direction = 2; break;
+                case KeyCode.D: newX += 1; direction = 1; break;
             }
 
             if(MapManager.isValidPosition(newX, newY)){
                 currentInput = lastInput;
                 posX = newX;
                 posY = newY;
+                animator.SetInteger("direction", direction);
                 StartCoroutine(MoveToSpot(MapManager.getPosition(newX, newY)));
+                playing = true;
             } else {
                 newX = posX;
                 newY = posY;
 
                 switch(currentInput){
-                    case KeyCode.W: newY -= 1; break;
-                    case KeyCode.A: newX -= 1; break;
-                    case KeyCode.S: newY += 1; break;
-                    case KeyCode.D: newX += 1; break;
+                    case KeyCode.W: newY -= 1; direction = 0; break;
+                    case KeyCode.A: newX -= 1; direction = 3; break;
+                    case KeyCode.S: newY += 1; direction = 2; break;
+                    case KeyCode.D: newX += 1; direction = 1; break;
                 }
 
                 if(MapManager.isValidPosition(newX, newY)){
                     posX = newX;
                     posY = newY;
+                    animator.SetInteger("direction", direction);
                     StartCoroutine(MoveToSpot(MapManager.getPosition(newX, newY)));
+                    playing = true;
                 }
             }
         }
