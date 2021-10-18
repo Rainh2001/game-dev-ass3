@@ -8,6 +8,7 @@ public class Grape_Spawner : MonoBehaviour
     private int grapeCount = 5;
 
     public GameObject grape;
+    public GameObject canvas;
 
     void Awake(){
         StartCoroutine(SpawnGrapes());
@@ -29,7 +30,8 @@ public class Grape_Spawner : MonoBehaviour
 
         for(int i = 0; i < grapeCount; i++){
             yield return new WaitForSeconds(0.25f);
-            Instantiate(grape);
+            GameObject newGrape = Instantiate(grape);
+            newGrape.transform.parent = canvas.transform;
         }
 
 

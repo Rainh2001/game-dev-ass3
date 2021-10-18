@@ -8,7 +8,9 @@ public class MapManager : MonoBehaviour
     public static List<List<int>> map = new List<List<int>>();
     private static Vector3 mapStart;
     private static GameObject topLeftTile;
-    private static float tileSize;
+    public static float tileSize;
+
+    public Vector3 center;
 
     void Awake(){
         topLeftTile = GameObject.FindGameObjectWithTag("FirstTile");
@@ -58,9 +60,15 @@ public class MapManager : MonoBehaviour
             }
             map.Add(row);
         }
+
+        center = getPosition(map[0].Count/2, map.Count/2);
     }
 
     public static Vector3 getPosition(int x, int y){
+        return new Vector3(mapStart.x + tileSize * x, mapStart.y + tileSize * y * -1, 0);
+    }
+
+    public static Vector3 getPosition(float x, float y){
         return new Vector3(mapStart.x + tileSize * x, mapStart.y + tileSize * y * -1, 0);
     }
 
