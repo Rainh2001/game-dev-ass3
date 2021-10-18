@@ -18,6 +18,8 @@ public class PacStudentController : MonoBehaviour
     private AudioSource audioSource;
     public AudioClip movingNoEating;
     public AudioClip movingAndEating;
+    public ParticleSystem particle;
+
 
     void Awake(){
         animator = gameObject.GetComponent<Animator>();
@@ -78,7 +80,9 @@ public class PacStudentController : MonoBehaviour
 
                 if(!playing){
                     animator.enabled = true;
+                    particle.Play();
                 }
+
                 currentInput = lastInput;
                 posX = newX;
                 posY = newY;
@@ -109,7 +113,9 @@ public class PacStudentController : MonoBehaviour
 
                     if(!playing){
                         animator.enabled = true;
+                        particle.Play();
                     }
+
                     posX = newX;
                     posY = newY;
                     animator.SetInteger("direction", direction);
@@ -119,6 +125,7 @@ public class PacStudentController : MonoBehaviour
             }
 
             if(!playing){
+                particle.Stop();
                 animator.enabled = false;
                 audioSource.Stop();
             }
@@ -140,6 +147,7 @@ public class PacStudentController : MonoBehaviour
             yield return null;
         }
 
+        particle.Play();
         transform.position = position;
         tweening = false;
         yield return null;
