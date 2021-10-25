@@ -178,10 +178,16 @@ public class PacStudentController : MonoBehaviour
             UIManager.score += 100;
             CherryController.destroyed = true;
             Destroy(other.gameObject);
-        } 
-        
-        else if (other.tag == "TeleportLeft" || other.tag == "TeleportRight"){
+        } else if (other.tag == "TeleportLeft" || other.tag == "TeleportRight"){
             teleporting = true;
+        } else if(other.tag == "Enemy"){
+            Debug.Log(other.gameObject.name);
+        } else if(other.tag == "Power_Pellet"){
+            Debug.Log("Power");
+            for(int i = 0; i < GhostController.ghosts.Length; i++){
+                GhostController.ghosts[i].ghostState = GhostController.GhostState.Scared;
+            }
+            Destroy(other.gameObject);
         }
     }
 
