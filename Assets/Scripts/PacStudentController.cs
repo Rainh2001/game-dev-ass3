@@ -19,7 +19,9 @@ public class PacStudentController : MonoBehaviour
     public AudioClip movingNoEating;
     public AudioClip movingAndEating;
     public ParticleSystem particle;
+    public ParticleSystem wallCollision;
 
+    private bool collided = false;
 
     void Awake(){
         animator = gameObject.GetComponent<Animator>();
@@ -89,6 +91,7 @@ public class PacStudentController : MonoBehaviour
                 animator.SetInteger("direction", direction);
                 StartCoroutine(MoveToSpot(MapManager.getPosition(newX, newY)));
                 playing = true;
+                collided = false;
             } else {
                 newX = posX;
                 newY = posY;
@@ -121,6 +124,7 @@ public class PacStudentController : MonoBehaviour
                     animator.SetInteger("direction", direction);
                     StartCoroutine(MoveToSpot(MapManager.getPosition(newX, newY)));
                     playing = true;
+                    collided = false;
                 }
             }
 
@@ -128,6 +132,8 @@ public class PacStudentController : MonoBehaviour
                 particle.Stop();
                 animator.enabled = false;
                 audioSource.Stop();
+                if(!collided) wallCollision.Play();
+                collided = true;
             }
         }
     }
@@ -151,5 +157,18 @@ public class PacStudentController : MonoBehaviour
         transform.position = position;
         tweening = false;
         yield return null;
+    }
+
+    void OnTriggerEnter(Collider other) {
+        if(other.tag == "Power_Pellet" || other.tag == "Pellet"){
+            Destroy(other.gameObject);
+        } else if(other.tag == "Wall"){
+            Debug.Log("Wall");
+        }
+        
+    }
+
+    void OnCollisionEnter(Collision other) {
+        if(other.gameObject.tag == "Wall") Debug.Log("Wall collision");
     }
 }

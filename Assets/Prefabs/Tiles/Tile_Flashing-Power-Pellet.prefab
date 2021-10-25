@@ -88,7 +88,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7599785685527252283, guid: 2a1cf6d301d7c8c499c298626ccbbc41, type: 3}
       propertyPath: m_Name
-      value: Tile-Pellet (1)
+      value: Tile_Flashing-Power-Pellet
+      objectReference: {fileID: 0}
+    - target: {fileID: 7599785685527252283, guid: 2a1cf6d301d7c8c499c298626ccbbc41, type: 3}
+      propertyPath: m_TagString
+      value: Power_Pellet
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2a1cf6d301d7c8c499c298626ccbbc41, type: 3}
