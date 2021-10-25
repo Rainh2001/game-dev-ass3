@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1048196962909636407}
   m_Layer: 6
   m_Name: Score_Bonus_Grape
-  m_TagString: Untagged
+  m_TagString: BonusCherry
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -91,7 +91,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1549853539748532251}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.6250019, y: 0.6633455, z: 0.2}

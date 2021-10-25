@@ -16,6 +16,7 @@ TagManager:
   - Score
   - Timer
   - GhostTimer
+  - BonusCherry
   layers:
   - Default
   - TransparentFX

@@ -174,7 +174,13 @@ public class PacStudentController : MonoBehaviour
         if(other.tag == "Pellet"){
             UIManager.score += 10;
             Destroy(other.gameObject);
-        } else if (other.tag == "TeleportLeft" || other.tag == "TeleportRight"){
+        } else if(other.tag == "BonusCherry"){
+            UIManager.score += 100;
+            CherryController.destroyed = true;
+            Destroy(other.gameObject);
+        } 
+        
+        else if (other.tag == "TeleportLeft" || other.tag == "TeleportRight"){
             teleporting = true;
         }
     }

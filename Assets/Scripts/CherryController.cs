@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CherryController : MonoBehaviour
 {
-
+    public static bool destroyed = false;
     private float timer;
     private int lastTime = 0;
 
@@ -112,15 +112,18 @@ public class CherryController : MonoBehaviour
 
         Vector3 startPos = target.position;
 
-        while (t < 1.0f){
+        while (t < 1.0f && !destroyed){
             t = (Time.time - startTime)/duration;
             target.position = Vector3.Lerp(startPos, position, t);
             yield return null;
         }
 
-        target.position = position;
-        Destroy(target.gameObject);
+        if(!destroyed){
+            target.position = position;
+            Destroy(target.gameObject);
+        }
 
+        destroyed = false;
         yield return null;
     }
 }
