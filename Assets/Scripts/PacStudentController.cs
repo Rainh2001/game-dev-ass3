@@ -171,8 +171,8 @@ public class PacStudentController : MonoBehaviour
     }
 
     void OnTriggerEnter(Collider other) {
-        if(other.tag == "Power_Pellet" || other.tag == "Pellet"){
-            // Destroy(other.gameObject);
+        if(other.tag == "Pellet"){
+            Destroy(other.gameObject);
         } else if (other.tag == "TeleportLeft" || other.tag == "TeleportRight"){
             teleporting = true;
         }
