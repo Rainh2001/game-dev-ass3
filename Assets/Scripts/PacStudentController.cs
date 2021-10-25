@@ -24,6 +24,8 @@ public class PacStudentController : MonoBehaviour
 
     private bool collided = false;
 
+    private bool teleporting = false;
+
     void Awake(){
         animator = gameObject.GetComponent<Animator>();
         audioSource = gameObject.GetComponent<AudioSource>();
@@ -57,7 +59,7 @@ public class PacStudentController : MonoBehaviour
             initialized = true;
         }
 
-        if(!tweening && initialized){
+        if(!tweening && initialized && !teleporting){
             bool playing = false;
             int newX = posX;
             int newY = posY;
@@ -134,7 +136,7 @@ public class PacStudentController : MonoBehaviour
                 particle.Stop();
                 animator.enabled = false;
                 audioSource.Stop();
-                if(!collided) {
+                if(!collided && !teleporting) {
                     wallCollision.Play();
                     wallCollisionAudio.Play();
                 }
@@ -153,13 +155,17 @@ public class PacStudentController : MonoBehaviour
 
         tweening = true;
         while (t < 1.0f){
+            if(teleporting) break;
             t = (Time.time - startTime)/duration;
             transform.position = Vector3.Lerp(startPos, position, t);
             yield return null;
         }
 
-        particle.Play();
-        transform.position = position;
+        if(!teleporting){
+            particle.Play();
+            transform.position = position;
+        }
+        
         tweening = false;
         yield return null;
     }
@@ -167,21 +173,27 @@ public class PacStudentController : MonoBehaviour
     void OnTriggerEnter(Collider other) {
         if(other.tag == "Power_Pellet" || other.tag == "Pellet"){
             // Destroy(other.gameObject);
-        } 
+        } else if (other.tag == "TeleportLeft" || other.tag == "TeleportRight"){
+            teleporting = true;
+        }
     }
 
     private void OnTriggerStay(Collider other) {
         if(other.tag == "TeleportLeft"){
-            Vector3 newPosition = MapManager.getPosition(1, 1);
-            posX = 1;
-            posY = 1;
+            Vector3 newPosition = MapManager.getPosition(26, 14);
+            posX = 26;
+            posY = 14;
             transform.position = newPosition;
         } else if(other.tag == "TeleportRight"){
-            Vector3 newPosition = MapManager.getPosition(1, 1);
+            Vector3 newPosition = MapManager.getPosition(1, 14);
             posX = 1;
-            posY = 1;
+            posY = 14;
             transform.position = newPosition;
         }
+    }
+
+    private void OnTriggerExit(Collider other) {
+        if(other.tag == "TeleportLeft" || other.tag == "TeleportRight") teleporting = false;    
     }
 
     void OnCollisionEnter(Collision other) {
