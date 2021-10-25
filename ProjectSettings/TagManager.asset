@@ -10,6 +10,8 @@ TagManager:
   - Power_Pellet
   - Wall
   - WallCollision
+  - TeleportLeft
+  - TeleportRight
   layers:
   - Default
   - TransparentFX
