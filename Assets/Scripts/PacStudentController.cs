@@ -166,11 +166,22 @@ public class PacStudentController : MonoBehaviour
 
     void OnTriggerEnter(Collider other) {
         if(other.tag == "Power_Pellet" || other.tag == "Pellet"){
-            Destroy(other.gameObject);
-        } else if(other.tag == "Wall"){
-            Debug.Log("Wall");
+            // Destroy(other.gameObject);
+        } 
+    }
+
+    private void OnTriggerStay(Collider other) {
+        if(other.tag == "TeleportLeft"){
+            Vector3 newPosition = MapManager.getPosition(1, 1);
+            posX = 1;
+            posY = 1;
+            transform.position = newPosition;
+        } else if(other.tag == "TeleportRight"){
+            Vector3 newPosition = MapManager.getPosition(1, 1);
+            posX = 1;
+            posY = 1;
+            transform.position = newPosition;
         }
-        
     }
 
     void OnCollisionEnter(Collision other) {
