@@ -172,6 +172,7 @@ public class PacStudentController : MonoBehaviour
 
     void OnTriggerEnter(Collider other) {
         if(other.tag == "Pellet"){
+            UIManager.score += 10;
             Destroy(other.gameObject);
         } else if (other.tag == "TeleportLeft" || other.tag == "TeleportRight"){
             teleporting = true;
@@ -180,14 +181,14 @@ public class PacStudentController : MonoBehaviour
 
     private void OnTriggerStay(Collider other) {
         if(other.tag == "TeleportLeft"){
-            Vector3 newPosition = MapManager.getPosition(26, 14);
             posX = 26;
             posY = 14;
+            Vector3 newPosition = MapManager.getPosition(posX, posY);
             transform.position = newPosition;
         } else if(other.tag == "TeleportRight"){
-            Vector3 newPosition = MapManager.getPosition(1, 14);
             posX = 1;
             posY = 14;
+            Vector3 newPosition = MapManager.getPosition(posX, posY);
             transform.position = newPosition;
         }
     }
