@@ -20,6 +20,7 @@ public class PacStudentController : MonoBehaviour
     public AudioClip movingAndEating;
     public ParticleSystem particle;
     public ParticleSystem wallCollision;
+    private AudioSource wallCollisionAudio;
 
     private bool collided = false;
 
@@ -30,6 +31,7 @@ public class PacStudentController : MonoBehaviour
         audioSource.loop = true;
         audioSource.clip = movingNoEating;
         animator.enabled = false;
+        wallCollisionAudio = GameObject.FindWithTag("WallCollision").GetComponent<AudioSource>();
     }
 
     // Start is called before the first frame update
@@ -132,7 +134,10 @@ public class PacStudentController : MonoBehaviour
                 particle.Stop();
                 animator.enabled = false;
                 audioSource.Stop();
-                if(!collided) wallCollision.Play();
+                if(!collided) {
+                    wallCollision.Play();
+                    wallCollisionAudio.Play();
+                }
                 collided = true;
             }
         }
