@@ -20,6 +20,8 @@ public class GhostController : MonoBehaviour
     private int index;
     private Animator animator;
 
+    private static int ghostDeadCount = 0;
+    private static bool ghostDead = false;
 
 
     void Awake(){
@@ -61,10 +63,41 @@ public class GhostController : MonoBehaviour
         
     }
 
+    public static void killedGhost(int ghostIndex){
+        ghosts[ghostIndex].animator.SetTrigger("dead");
+        ghosts[ghostIndex].ghostState = GhostState.Dead;
+        ghostDeadCount++;
+        ghostDead = true;
+        ComponentManager.audioManager.changeMusicState(AudioManager.MusicState.Dead);
+        ghosts[ghostIndex].StartCoroutine(ghostRebirth(ghostIndex));
+    }
+
+    static IEnumerator ghostRebirth(int ghostIndex){
+        yield return new WaitForSeconds(5);
+        
+        ghostDeadCount--;
+        if(ghostDeadCount == 0){
+            ghostDead = false;
+            if(staticGhostState == GhostState.Alive){
+                ComponentManager.audioManager.changeMusicState(AudioManager.MusicState.Normal);
+            } else {
+                ComponentManager.audioManager.changeMusicState(AudioManager.MusicState.Scared);
+            }
+        }
+
+        ghosts[ghostIndex].animator.SetTrigger("alive");
+        ghosts[ghostIndex].ghostState = GhostState.Alive;
+
+        yield return null;
+    }
+
     public void updateGhostState(GhostState state){
 
         switch(state){
-            case GhostState.Alive: ComponentManager.audioManager.changeMusicState(AudioManager.MusicState.Normal); break;
+            case GhostState.Alive: {
+                if(!ghostDead) ComponentManager.audioManager.changeMusicState(AudioManager.MusicState.Normal); 
+                break;
+            }
             case GhostState.Scared: {
                 ComponentManager.audioManager.changeMusicState(AudioManager.MusicState.Scared); 
                 timerCounter = 0;
@@ -97,11 +130,6 @@ public class GhostController : MonoBehaviour
                         } else if(state == GhostState.Alive){
                             updateToAlive(i);
                         }  
-                        break;
-                    case GhostState.Dead:
-                        if(state == GhostState.Alive){
-                            updateToAlive(i);
-                        } 
                         break;
                 }
             }

@@ -9,8 +9,9 @@ public class AudioManager : MonoBehaviour
     public AudioClip backgroundIntro;
     public AudioClip backgroundNormal;
     public AudioClip backgroundScared;
+    public AudioClip backgroundDead;
 
-    public enum MusicState { Normal, Scared }
+    public enum MusicState { Normal, Scared, Dead }
 
     public MusicState musicState = MusicState.Normal;
 
@@ -44,6 +45,7 @@ public class AudioManager : MonoBehaviour
         switch(state){
             case MusicState.Normal: audioSource.clip = backgroundNormal; break;
             case MusicState.Scared: audioSource.clip = backgroundScared; break;
+            case MusicState.Dead: audioSource.clip = backgroundDead; break;
         }
         audioSource.volume = 0.5f;
         audioSource.loop = true;

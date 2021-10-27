@@ -197,11 +197,17 @@ public class PacStudentController : MonoBehaviour
                     animator.SetTrigger("death");
                     audioSource.Stop();
                     particle.Stop();
-                    Invoke("playerDeath", 2.7f);
+                    Invoke("playerDeath", 2.3f);
                 }
 
-            } else if(ghost.ghostState == GhostController.GhostState.Alive || ghost.ghostState == GhostController.GhostState.Recovering){
-                Debug.Log("Kill the ghost");
+            } else if(ghost.ghostState == GhostController.GhostState.Scared || ghost.ghostState == GhostController.GhostState.Recovering){
+                
+                if(pacState == PacState.Alive){
+                    UIManager.score += 300;
+                    int index = int.Parse(other.tag[other.tag.Length-1] + "") - 1;
+                    GhostController.killedGhost(index);
+                }
+                
             }
 
         } else if(other.tag == "Power_Pellet"){

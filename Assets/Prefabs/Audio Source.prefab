@@ -144,3 +144,5 @@ MonoBehaviour:
   backgroundIntro: {fileID: 8300000, guid: 0b039db50e3de5a4cb15e343c82f5327, type: 3}
   backgroundNormal: {fileID: 8300000, guid: 8b8f45bf4d7c95945a1c03cb23850e7b, type: 3}
   backgroundScared: {fileID: 8300000, guid: 06344fad58165004a9a75e55ec00a9b7, type: 3}
+  backgroundDead: {fileID: 8300000, guid: cb5df4262fca56f439e759aa6bd84758, type: 3}
+  musicState: 0
