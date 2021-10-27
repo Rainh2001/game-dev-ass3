@@ -86,6 +86,7 @@ public class MapManager : MonoBehaviour
 
         if(tile == 0) return false;
 
+        map[y][x] = 0;
         return true;
     }
 }

@@ -5022,6 +5022,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movingNoEating: {fileID: 8300000, guid: f00065ff91d0bc54191120c60eee40ac, type: 3}
   movingAndEating: {fileID: 8300000, guid: 354e1403e5827104085e46469745f251, type: 3}
+  death: {fileID: 8300000, guid: b4b2aed9b77d7dd4d8bbd8b732b9cfbd, type: 3}
   particle: {fileID: 6064265293414737992}
   wallCollision: {fileID: 8686328597559346550}
 --- !u!65 &3638609698959504159

@@ -18,6 +18,7 @@ public class PacStudentController : MonoBehaviour
     private AudioSource audioSource;
     public AudioClip movingNoEating;
     public AudioClip movingAndEating;
+    public AudioClip death;
     public ParticleSystem particle;
     public ParticleSystem wallCollision;
     private AudioSource wallCollisionAudio;
@@ -195,7 +196,10 @@ public class PacStudentController : MonoBehaviour
                     ComponentManager.uIManager.loseLife();
                     pacState = PacState.Dead;
                     animator.SetTrigger("death");
-                    audioSource.Stop();
+                    // audioSource.Stop();
+                    audioSource.clip = death;
+                    audioSource.volume = 0.5f;
+                    audioSource.Play();
                     particle.Stop();
                     Invoke("playerDeath", 2.3f);
                 }
