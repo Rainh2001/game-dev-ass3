@@ -183,11 +183,15 @@ public class PacStudentController : MonoBehaviour
         } else if(other.tag == "Enemy"){
             Debug.Log(other.gameObject.name);
         } else if(other.tag == "Power_Pellet"){
-            Debug.Log("Power");
-            for(int i = 0; i < GhostController.ghosts.Length; i++){
-                GhostController.ghosts[i].ghostState = GhostController.GhostState.Scared;
-            }
+
+
+            // for(int i = 0; i < GhostController.ghosts.Length; i++){
+            //     GhostController.ghosts[i].ghostState = GhostController.GhostState.Scared;
+            // }
+
+            GhostController.updateGhostState(GhostController.GhostState.Scared);
             Destroy(other.gameObject);
+
         }
     }
 

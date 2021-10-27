@@ -11,15 +11,18 @@ public class GhostController : MonoBehaviour
 
     public enum GhostState { Alive, Scared, Recovering, Dead }
 
-    public GhostState ghostState = GhostState.Alive;
-    private GhostState oldState = GhostState.Alive;
+
+    // public GhostState ghostState = GhostState.Alive;
+    private GhostState ghostState = GhostState.Alive;
     private int index;
+    private Animator animator;
 
     void Awake(){
         index = int.Parse(gameObject.tag[gameObject.tag.Length - 1] + "") - 1;
-        ghostObjects[index] = gameObject;
-        ghostAnimators[index] = gameObject.GetComponent<Animator>();
+        // ghostObjects[index] = gameObject;
+        // ghostAnimators[index] = gameObject.GetComponent<Animator>();
         ghosts[index] = this;
+        animator = gameObject.GetComponent<Animator>();
     }
 
     // Start is called before the first frame update
@@ -31,39 +34,44 @@ public class GhostController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(oldState != ghostState){
-            switch(oldState){
-                case GhostState.Alive: 
-                    if(ghostState == GhostState.Scared){
-                        oldState = ghostState;
-                        ghostAnimators[index].SetTrigger("scared");
-                    } else ghostState = oldState; 
-                    break;
-                case GhostState.Scared:
-                    if(ghostState == GhostState.Recovering){
-                        oldState = ghostState;
-                        ghostAnimators[index].SetTrigger("recovering");
-                    } else ghostState = oldState; 
-                    break;
-                case GhostState.Recovering:
-                    if(ghostState == GhostState.Scared){
-                        oldState = ghostState;
-                        ghostAnimators[index].SetTrigger("scared");
-                    } else if(ghostState == GhostState.Dead){
-                        oldState = ghostState;
-                        ghostAnimators[index].SetTrigger("dead");
-                    } else if(ghostState == GhostState.Alive){
-                        oldState = ghostState;
-                        ghostAnimators[index].SetTrigger("alive");
-                    } else ghostState = oldState; 
-                    break;
-                case GhostState.Dead:
-                    if(ghostState == GhostState.Alive){
-                        oldState = ghostState;
-                        ghostAnimators[index].SetTrigger("alive");
-                    } else ghostState = oldState; 
-                    break;
-                default: ghostState = oldState; break;
+        
+    }
+
+    public static void updateGhostState(GhostState state){
+        for(int i = 0; i < ghosts.Length; i++){
+            if(ghosts[i].ghostState != state){
+                switch(ghosts[i].ghostState){
+                    case GhostState.Alive: 
+                        if(state == GhostState.Scared){
+                            ghosts[i].ghostState = state;
+                            ghosts[i].animator.SetTrigger("scared");
+                        } 
+                        break;
+                    case GhostState.Scared:
+                        if(state == GhostState.Recovering){
+                            ghosts[i].ghostState = state;
+                            ghosts[i].animator.SetTrigger("recovering");
+                        }
+                        break;
+                    case GhostState.Recovering:
+                        if(state == GhostState.Scared){
+                            ghosts[i].ghostState = state;
+                            ghosts[i].animator.SetTrigger("scared");
+                        } else if(state == GhostState.Dead){
+                            ghosts[i].ghostState = state;
+                            ghosts[i].animator.SetTrigger("dead");
+                        } else if(state == GhostState.Alive){
+                            ghosts[i].ghostState = state;
+                            ghosts[i].animator.SetTrigger("alive");
+                        }  
+                        break;
+                    case GhostState.Dead:
+                        if(state == GhostState.Alive){
+                            ghosts[i].ghostState = state;
+                            ghosts[i].animator.SetTrigger("alive");
+                        }
+                        break;
+                }
             }
         }
     }
