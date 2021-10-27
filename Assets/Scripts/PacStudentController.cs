@@ -27,6 +27,9 @@ public class PacStudentController : MonoBehaviour
     private bool teleporting = false;
     private GhostController ghostController;
 
+    private enum PacState { Alive, Dead }
+    private PacState pacState = PacState.Alive;
+
     void Awake(){
         ComponentManager.pacStudentController = this;
         animator = gameObject.GetComponent<Animator>();
@@ -61,7 +64,7 @@ public class PacStudentController : MonoBehaviour
             initialized = true;
         }
 
-        if(!tweening && initialized && !teleporting){
+        if(!tweening && initialized && !teleporting && pacState == PacState.Alive){
             bool playing = false;
             int newX = posX;
             int newY = posY;
@@ -157,13 +160,13 @@ public class PacStudentController : MonoBehaviour
 
         tweening = true;
         while (t < 1.0f){
-            if(teleporting) break;
+            if(teleporting || pacState == PacState.Dead) break;
             t = (Time.time - startTime)/duration;
             transform.position = Vector3.Lerp(startPos, position, t);
             yield return null;
         }
 
-        if(!teleporting){
+        if(!teleporting && pacState != PacState.Dead){
             particle.Play();
             transform.position = position;
         }
@@ -187,7 +190,16 @@ public class PacStudentController : MonoBehaviour
             // Check if the enemy is in Alive or Scared/Recovering
             GhostController ghost = other.gameObject.GetComponent<GhostController>();
             if(ghost.ghostState == GhostController.GhostState.Alive){
-                ComponentManager.uIManager.loseLife();
+
+                if(pacState == PacState.Alive){
+                    ComponentManager.uIManager.loseLife();
+                    pacState = PacState.Dead;
+                    animator.SetTrigger("death");
+                    audioSource.Stop();
+                    particle.Stop();
+                    Invoke("playerDeath", 2.7f);
+                }
+
             } else if(ghost.ghostState == GhostController.GhostState.Alive || ghost.ghostState == GhostController.GhostState.Recovering){
                 Debug.Log("Kill the ghost");
             }
@@ -218,5 +230,17 @@ public class PacStudentController : MonoBehaviour
 
     void OnCollisionEnter(Collision other) {
         if(other.gameObject.tag == "Wall") Debug.Log("Wall collision");
+    }
+
+    void playerDeath(){
+        audioSource.loop = true;
+        audioSource.clip = movingNoEating;
+        initialized = false;
+        posX = 1;
+        posY = 1;
+        transform.position = MapManager.getPosition(1, 1);
+        transform.rotation = Quaternion.identity;
+        animator.SetTrigger("alive");
+        pacState = PacState.Alive;
     }
 }
