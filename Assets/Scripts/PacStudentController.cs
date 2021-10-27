@@ -182,14 +182,19 @@ public class PacStudentController : MonoBehaviour
             Destroy(other.gameObject);
         } else if (other.tag == "TeleportLeft" || other.tag == "TeleportRight"){
             teleporting = true;
-        } else if(other.tag == "Enemy"){
-            Debug.Log(other.gameObject.name);
-        } else if(other.tag == "Power_Pellet"){
+        } else if(other.tag.Substring(0, 5) == "Enemy"){
 
-            // ghostController.updateGhostState(GhostController.GhostState.Scared);
+            // Check if the enemy is in Alive or Scared/Recovering
+            GhostController ghost = other.gameObject.GetComponent<GhostController>();
+            if(ghost.ghostState == GhostController.GhostState.Alive){
+                ComponentManager.uIManager.loseLife();
+            } else if(ghost.ghostState == GhostController.GhostState.Alive || ghost.ghostState == GhostController.GhostState.Recovering){
+                Debug.Log("Kill the ghost");
+            }
+
+        } else if(other.tag == "Power_Pellet"){
             ComponentManager.ghostController.updateGhostState(GhostController.GhostState.Scared);
             Destroy(other.gameObject);
-
         }
     }
 

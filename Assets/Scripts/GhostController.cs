@@ -16,7 +16,7 @@ public class GhostController : MonoBehaviour
     private static GhostState staticGhostState = GhostState.Alive;
 
     // public GhostState ghostState = GhostState.Alive;
-    private GhostState ghostState = GhostState.Alive;
+    public GhostState ghostState = GhostState.Alive;
     private int index;
     private Animator animator;
 

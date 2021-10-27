@@ -42,4 +42,9 @@ public class UIManager : MonoBehaviour
         }
 
     }
+
+    public void loseLife(){
+        if(lives > 0) Destroy(lifeHolder.transform.Find("Life" + lives).gameObject);
+        lives--;
+    }
 }
