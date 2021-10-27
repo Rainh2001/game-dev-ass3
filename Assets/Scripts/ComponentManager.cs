@@ -8,6 +8,7 @@ public class ComponentManager : MonoBehaviour
     public static AudioManager audioManager;
     public static GhostController ghostController;
     public static PacStudentController pacStudentController;
+    public static UIManager uIManager;
 
     // Start is called before the first frame update
     void Start()

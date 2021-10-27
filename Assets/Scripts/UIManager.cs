@@ -7,17 +7,22 @@ public class UIManager : MonoBehaviour
 {
 
     [SerializeField]
-    private GameObject lifeHolder;
+    public GameObject lifeHolder;
     public static int lives = 3;
     [SerializeField]
-    private Text scoreText;
+    public Text scoreText;
     public static int score = 0;
     [SerializeField]
-    private Text timerText;
+    public Text timerText;
     public static string timer = "00:00:00";
     [SerializeField]
-    private Text ghostTimerText;
-    public static string ghostTimer = "00:00:00";
+    public Text ghostTimerText;
+    public static int ghostTimer = 0;
+
+    private void Awake() {
+        ComponentManager.uIManager = this;
+        ghostTimerText.text = "";
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -30,6 +35,11 @@ public class UIManager : MonoBehaviour
     {
         scoreText.text = "Score: " + score;
         timerText.text = timer;
-        ghostTimerText.text = ghostTimer;
+        if(ghostTimer != 0){
+            ghostTimerText.text = "Scared: " + ghostTimer;
+        } else {
+            ghostTimerText.text = "";
+        }
+
     }
 }

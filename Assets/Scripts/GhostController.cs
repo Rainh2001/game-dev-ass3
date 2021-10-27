@@ -9,14 +9,20 @@ public class GhostController : MonoBehaviour
 
     public enum GhostState { Alive, Scared, Recovering, Dead }
 
+    public static int timerCounter;
+    private static float timer;
+    private static bool timerActive = false;
+
+    private static GhostState staticGhostState = GhostState.Alive;
 
     // public GhostState ghostState = GhostState.Alive;
     private GhostState ghostState = GhostState.Alive;
     private int index;
     private Animator animator;
 
+
+
     void Awake(){
-        
         index = int.Parse(gameObject.tag[gameObject.tag.Length - 1] + "") - 1;
         ghosts[index] = this;
         if(index == 0) ComponentManager.ghostController = this;
@@ -32,6 +38,19 @@ public class GhostController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(index == 0){
+            if(staticGhostState == GhostState.Scared && timerCounter < 10){
+                ComponentManager.uIManager.ghostTimerText.gameObject.SetActive(true);
+                timer += Time.deltaTime;
+                if(timer - timerCounter >= 1){
+                    timerCounter++;
+                    UIManager.ghostTimer = 10 - timerCounter;
+                }
+            } else if(timerActive){
+                ComponentManager.uIManager.ghostTimerText.gameObject.SetActive(false);
+                timerActive = false;
+            }
+        }
         
     }
 
@@ -39,7 +58,15 @@ public class GhostController : MonoBehaviour
 
         switch(state){
             case GhostState.Alive: ComponentManager.audioManager.changeMusicState(AudioManager.MusicState.Normal); break;
-            case GhostState.Scared: ComponentManager.audioManager.changeMusicState(AudioManager.MusicState.Scared); break;
+            case GhostState.Scared: {
+                ComponentManager.audioManager.changeMusicState(AudioManager.MusicState.Scared); 
+                timerCounter = 0;
+                timer = 0.0f;
+                staticGhostState = GhostState.Scared;
+                timerActive = true;
+                UIManager.ghostTimer = 10;
+                break;
+            }
         }
 
         for(int i = 0; i < ghosts.Length; i++){
@@ -67,26 +94,26 @@ public class GhostController : MonoBehaviour
                     case GhostState.Dead:
                         if(state == GhostState.Alive){
                             updateToAlive(i);
-                        }
+                        } 
                         break;
                 }
             }
         }
     }
 
-    private static void updateToScared(int i){
+    private void updateToScared(int i){
         ghosts[i].ghostState = GhostState.Scared;
         ghosts[i].animator.SetTrigger("scared");
     }
-    private static void updateToAlive(int i){
+    private void updateToAlive(int i){
         ghosts[i].ghostState = GhostState.Alive;
         ghosts[i].animator.SetTrigger("alive");
     }
-    private static void updateToDead(int i){
+    private void updateToDead(int i){
         ghosts[i].ghostState = GhostState.Dead;
         ghosts[i].animator.SetTrigger("dead");
     }
-    private static void updateToRecovering(int i){
+    private void updateToRecovering(int i){
         ghosts[i].ghostState = GhostState.Recovering;
         ghosts[i].animator.SetTrigger("recovering");
     }
