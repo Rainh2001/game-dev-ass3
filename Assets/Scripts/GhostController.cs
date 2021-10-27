@@ -44,10 +44,17 @@ public class GhostController : MonoBehaviour
                 timer += Time.deltaTime;
                 if(timer - timerCounter >= 1){
                     timerCounter++;
-                    UIManager.ghostTimer = 10 - timerCounter;
+                    int timeRemaining = 10 - timerCounter;
+                    UIManager.ghostTimer = timeRemaining;
+
+                    if(timeRemaining <= 3) {
+                        updateGhostState(GhostState.Recovering);
+                    }
                 }
             } else if(timerActive){
                 ComponentManager.uIManager.ghostTimerText.gameObject.SetActive(false);
+                staticGhostState = GhostState.Alive;
+                updateGhostState(GhostState.Alive);
                 timerActive = false;
             }
         }
