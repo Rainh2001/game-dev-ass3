@@ -21,6 +21,7 @@ public class PacStudentController : MonoBehaviour
     public AudioClip death;
     public ParticleSystem particle;
     public ParticleSystem wallCollision;
+    public ParticleSystem deathParticle;
     private AudioSource wallCollisionAudio;
 
     private bool collided = false;
@@ -201,6 +202,7 @@ public class PacStudentController : MonoBehaviour
                     audioSource.volume = 0.5f;
                     audioSource.Play();
                     particle.Stop();
+                    deathParticle.Play();
                     Invoke("playerDeath", 2.3f);
                 }
 
