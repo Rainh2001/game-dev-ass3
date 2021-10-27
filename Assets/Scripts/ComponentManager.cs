@@ -2,14 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class ComponentManager : MonoBehaviour
 {
-    
-    public enum GameState { Start, Level1, Level2 }
-    public static GameState currentGameState = GameState.Start;
 
-    
-
+    public static AudioManager audioManager;
+    public static GhostController ghostController;
+    public static PacStudentController pacStudentController;
 
     // Start is called before the first frame update
     void Start()

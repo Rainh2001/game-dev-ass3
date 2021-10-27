@@ -25,8 +25,10 @@ public class PacStudentController : MonoBehaviour
     private bool collided = false;
 
     private bool teleporting = false;
+    private GhostController ghostController;
 
     void Awake(){
+        ComponentManager.pacStudentController = this;
         animator = gameObject.GetComponent<Animator>();
         audioSource = gameObject.GetComponent<AudioSource>();
         audioSource.Stop();
@@ -184,12 +186,8 @@ public class PacStudentController : MonoBehaviour
             Debug.Log(other.gameObject.name);
         } else if(other.tag == "Power_Pellet"){
 
-
-            // for(int i = 0; i < GhostController.ghosts.Length; i++){
-            //     GhostController.ghosts[i].ghostState = GhostController.GhostState.Scared;
-            // }
-
-            GhostController.updateGhostState(GhostController.GhostState.Scared);
+            // ghostController.updateGhostState(GhostController.GhostState.Scared);
+            ComponentManager.ghostController.updateGhostState(GhostController.GhostState.Scared);
             Destroy(other.gameObject);
 
         }
