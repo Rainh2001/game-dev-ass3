@@ -52,6 +52,11 @@ public class PacStudentController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        if(UIManager.gameOver){
+            audioSource.loop = false;
+        }
+
         if(Input.GetKeyDown(KeyCode.W)){
             lastInput = KeyCode.W;
             initialized = true;

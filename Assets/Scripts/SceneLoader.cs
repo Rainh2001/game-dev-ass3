@@ -30,7 +30,7 @@ public class SceneLoader : MonoBehaviour
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    public void loadStartScreen(){
+    public static void loadStartScreen(){
         SceneManager.LoadSceneAsync(0);
     }
 
@@ -38,6 +38,8 @@ public class SceneLoader : MonoBehaviour
         if(scene.buildIndex == 1){
             button = GameObject.FindWithTag("QuitButton").GetComponent<Button>();
             button.onClick.AddListener(loadStartScreen);
+        } else if(scene.buildIndex == 0){
+            Time.timeScale = 1.0f;
         }
     }
 }
