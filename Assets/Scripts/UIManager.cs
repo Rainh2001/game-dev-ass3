@@ -18,10 +18,16 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     public Text ghostTimerText;
     public static int ghostTimer = 0;
+    public Text countdownText;
+
+    private int timerCounter = 0;
+    private float countdownTimer;
+    public static bool countingDown = true;
 
     private void Awake() {
         ComponentManager.uIManager = this;
         ghostTimerText.text = "";
+        Time.timeScale = 0.0f;
     }
 
     // Start is called before the first frame update
@@ -33,6 +39,22 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(countingDown){
+            countdownTimer += Time.unscaledDeltaTime;
+            if(countdownTimer - timerCounter >= 1){
+                timerCounter++;
+                if(timerCounter == 3){
+                    countingDown = false;
+                    countdownText.text = "GO!";
+                    Time.timeScale = 1.0f;
+                    Invoke("clearTimer", 1.0f);
+                } else {
+                    countdownText.text = 3 - timerCounter + "";
+                }
+            }
+        }
+        
+
         scoreText.text = "Score: " + score;
         timerText.text = timer;
         if(ghostTimer != 0){
@@ -46,5 +68,10 @@ public class UIManager : MonoBehaviour
     public void loseLife(){
         if(lives > 0) Destroy(lifeHolder.transform.Find("Life" + lives).gameObject);
         lives--;
+    }
+
+    private void clearTimer(){
+        Debug.Log("countdown cleared");
+        countdownText.text = "";
     }
 }
