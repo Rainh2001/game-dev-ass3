@@ -14,6 +14,7 @@ public class AudioManager : MonoBehaviour
     public enum MusicState { Normal, Scared, Dead }
 
     public MusicState musicState = MusicState.Normal;
+    private bool initialized = false;
 
     void Awake(){
         ComponentManager.audioManager = this;
@@ -32,11 +33,12 @@ public class AudioManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {   
-        if(!audioSource.isPlaying && musicState == MusicState.Normal){
+        if(!initialized && musicState == MusicState.Normal && !UIManager.countingDown){
             audioSource.clip = backgroundNormal;
             audioSource.volume = 0.5f;
             audioSource.loop = true;
             audioSource.Play();
+            initialized = true;
         }
 
     }
