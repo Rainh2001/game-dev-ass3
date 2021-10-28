@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,7 +24,6 @@ public class UIManager : MonoBehaviour
     private int timerCounter = 0;
     private float countdownTimer;
     public static bool countingDown = true;
-    private bool numCounting = true;
 
     private void Awake() {
         ComponentManager.uIManager = this;
@@ -55,7 +55,12 @@ public class UIManager : MonoBehaviour
                 }
             }
         }
-        
+
+        float time = Time.timeSinceLevelLoad;
+        TimeSpan timeSpan = TimeSpan.FromSeconds(time);
+        string timeText = string.Format("{0:D2}:{1:D2}:{2:D2}", timeSpan.Minutes, timeSpan.Seconds, timeSpan.Milliseconds);
+        timeText = timeText.Substring(0, 8);
+        timer = timeText;
 
         scoreText.text = "Score: " + score;
         timerText.text = timer;
