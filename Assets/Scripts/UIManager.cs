@@ -23,6 +23,7 @@ public class UIManager : MonoBehaviour
     private int timerCounter = 0;
     private float countdownTimer;
     public static bool countingDown = true;
+    private bool numCounting = true;
 
     private void Awake() {
         ComponentManager.uIManager = this;
@@ -44,10 +45,11 @@ public class UIManager : MonoBehaviour
             if(countdownTimer - timerCounter >= 1){
                 timerCounter++;
                 if(timerCounter == 3){
-                    countingDown = false;
                     countdownText.text = "GO!";
+                } else if(timerCounter == 4){
+                    countdownText.text = "";
+                    countingDown = false;
                     Time.timeScale = 1.0f;
-                    Invoke("clearTimer", 1.0f);
                 } else {
                     countdownText.text = 3 - timerCounter + "";
                 }
@@ -68,9 +70,5 @@ public class UIManager : MonoBehaviour
     public void loseLife(){
         if(lives > 0) Destroy(lifeHolder.transform.Find("Life" + lives).gameObject);
         lives--;
-    }
-
-    private void clearTimer(){
-        countdownText.text = "";
     }
 }
