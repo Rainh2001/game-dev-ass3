@@ -46,7 +46,7 @@ public class PacStudentController : MonoBehaviour
         audioSource = gameObject.GetComponent<AudioSource>();
         audioSource.Stop();
         audioSource.loop = true;
-        audioSource.clip = movingNoEating;
+        audioSource.clip = movingAndEating;
         animator.enabled = false;
         wallCollisionAudio = GameObject.FindWithTag("WallCollision").GetComponent<AudioSource>();
     }
