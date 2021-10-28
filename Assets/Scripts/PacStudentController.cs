@@ -66,7 +66,7 @@ public class PacStudentController : MonoBehaviour
             initialized = true;
         }
 
-        if(!tweening && initialized && !teleporting && pacState == PacState.Alive){
+        if(!tweening && initialized && !teleporting && pacState == PacState.Alive && !UIManager.countingDown){
             bool playing = false;
             int newX = posX;
             int newY = posY;

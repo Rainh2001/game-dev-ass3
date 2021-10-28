@@ -71,7 +71,6 @@ public class UIManager : MonoBehaviour
     }
 
     private void clearTimer(){
-        Debug.Log("countdown cleared");
         countdownText.text = "";
     }
 }
