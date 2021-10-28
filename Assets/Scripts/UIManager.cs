@@ -16,7 +16,7 @@ public class UIManager : MonoBehaviour
     public static int score = 0;
     [SerializeField]
     public Text timerText;
-    public static string timer = "00:00:00";
+    public static float timer;
     [SerializeField]
     public Text ghostTimerText;
     public static int ghostTimer = 0;
@@ -37,7 +37,7 @@ public class UIManager : MonoBehaviour
         ghostTimer = 0;
         score = 0;
         lives = 3;
-        timer = "00:00:00";
+        timer = 0.0f;
         ComponentManager.uIManager = this;
         ghostTimerText.text = "";
         Time.timeScale = 0.0f;
@@ -70,17 +70,31 @@ public class UIManager : MonoBehaviour
             }
         }
 
-        float time = Time.timeSinceLevelLoad;
-        TimeSpan timeSpan = TimeSpan.FromSeconds(time);
+        timer = Time.timeSinceLevelLoad;
+        TimeSpan timeSpan = TimeSpan.FromSeconds(timer);
         string timeText = string.Format("{0:D2}:{1:D2}:{2:D2}", timeSpan.Minutes, timeSpan.Seconds, timeSpan.Milliseconds);
         timeText = timeText.Substring(0, 8);
-        timer = timeText;
 
         if(gameOver && !gameOverInitialized){
             ComponentManager.audioManager.audioSource.loop = false;
             gameOverInitialized = true;
             countdownText.text = "Game Over";
             Time.timeScale = 0.0f;
+
+            float previousLowTime= 0.0f;
+            if(PlayerPrefs.HasKey("time")){
+                previousLowTime = PlayerPrefs.GetFloat("time");
+            }
+            int previousHighscore = 0;
+            if(PlayerPrefs.HasKey("highscore")){
+                previousHighscore = PlayerPrefs.GetInt("highscore");
+            }
+
+            if(score > previousHighscore || (score == previousHighscore && timer < previousLowTime && timer != 0.0f)){
+                PlayerPrefs.SetInt("highscore", score);
+                PlayerPrefs.SetFloat("time", timer);
+            }
+
         }
 
         if(gameOver){
@@ -94,7 +108,7 @@ public class UIManager : MonoBehaviour
         }
 
         scoreText.text = "Score: " + score;
-        timerText.text = timer;
+        timerText.text = timeText;
         if(ghostTimer != 0){
             ghostTimerText.text = "Scared: " + ghostTimer;
         } else {

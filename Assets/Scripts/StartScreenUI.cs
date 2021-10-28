@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class StartScreenUI : MonoBehaviour
 {
@@ -9,10 +10,11 @@ public class StartScreenUI : MonoBehaviour
     public Text highscoreText;
     public Text timeText;
     private int highscore = 0;
-    private string time = "00:00:00";
+    private float time = 0.0f;
 
     void Awake(){
-
+        highscore = 0;
+        time = 0.0f;
     }
 
     // Start is called before the first frame update
@@ -28,10 +30,14 @@ public class StartScreenUI : MonoBehaviour
             highscore = PlayerPrefs.GetInt("highscore");
         }
         if(PlayerPrefs.HasKey("time")){
-            time = PlayerPrefs.GetString("time");
+            time = PlayerPrefs.GetFloat("time");
         }
 
+        TimeSpan timeSpan = TimeSpan.FromSeconds(time);
+        string lowestTime = string.Format("{0:D2}:{1:D2}:{2:D2}", timeSpan.Minutes, timeSpan.Seconds, timeSpan.Milliseconds);
+        lowestTime = lowestTime.Substring(0, 8);
+
         highscoreText.text = "Highscore: " + highscore;
-        timeText.text = "Best Time: " + time;
+        timeText.text = "Best Time: " + lowestTime;
     }
 }
