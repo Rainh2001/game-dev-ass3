@@ -24,6 +24,9 @@ public class PacStudentController : MonoBehaviour
     public ParticleSystem deathParticle;
     private AudioSource wallCollisionAudio;
 
+    private int pelletsEaten;
+    private int totalPellets;
+
     private bool collided = false;
 
     private bool teleporting = false;
@@ -34,6 +37,11 @@ public class PacStudentController : MonoBehaviour
 
     void Awake(){
         ComponentManager.pacStudentController = this;
+        pelletsEaten = 0;
+        GameObject[] pelletGO = GameObject.FindGameObjectsWithTag("Pellet");
+        GameObject[] powerGO = GameObject.FindGameObjectsWithTag("Power_Pellet");
+        totalPellets = pelletGO.Length + powerGO.Length;
+
         animator = gameObject.GetComponent<Animator>();
         audioSource = gameObject.GetComponent<AudioSource>();
         audioSource.Stop();
@@ -52,6 +60,10 @@ public class PacStudentController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        if(pelletsEaten == totalPellets){
+            UIManager.gameOver = true;
+        }
 
         if(UIManager.gameOver){
             audioSource.loop = false;
@@ -185,6 +197,7 @@ public class PacStudentController : MonoBehaviour
     void OnTriggerEnter(Collider other) {
         if(other.tag == "Pellet"){
             UIManager.score += 10;
+            pelletsEaten++;
             Destroy(other.gameObject);
         } else if(other.tag == "BonusCherry"){
             UIManager.score += 100;
@@ -223,6 +236,7 @@ public class PacStudentController : MonoBehaviour
 
         } else if(other.tag == "Power_Pellet"){
             ComponentManager.ghostController.updateGhostState(GhostController.GhostState.Scared);
+            pelletsEaten++;
             Destroy(other.gameObject);
         }
     }

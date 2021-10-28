@@ -80,6 +80,7 @@ public class UIManager : MonoBehaviour
             ComponentManager.audioManager.audioSource.loop = false;
             gameOverInitialized = true;
             countdownText.text = "Game Over";
+            Time.timeScale = 0.0f;
         }
 
         if(gameOver){
@@ -107,7 +108,6 @@ public class UIManager : MonoBehaviour
         lives--;
         if(lives == 0){
             gameOver = true;
-            Time.timeScale = 0.0f;
         }
     }
 }
