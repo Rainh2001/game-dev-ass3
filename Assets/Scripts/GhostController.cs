@@ -25,7 +25,6 @@ public class GhostController : MonoBehaviour
     private float speed;
     private float baseSpeed = 5.0f;
     private bool tweening;
-    private bool inSpawn = true;
     private int posX;
     private int posY;
     private int previousX;
@@ -45,7 +44,6 @@ public class GhostController : MonoBehaviour
         animator = gameObject.GetComponent<Animator>();
         speed = 5.0f;   
         tweening = false;
-        inSpawn = true;
         posY = spawnY;
         inPosition = true;
         switch(index){
@@ -99,6 +97,7 @@ public class GhostController : MonoBehaviour
             moveList.Add(2);
             moveList.Add(2);
             moveList.Add(2);
+            moveList.Add(1);
             moveList.Add(1);
             moveList.Add(1);
             moveList.Add(1);
@@ -347,7 +346,12 @@ public class GhostController : MonoBehaviour
                                 moveList.Add(2);
                                 moveList.Add(3);
                             } else if(right){
-                                direction = 1;
+                                moveList.Add(1);
+                                moveList.Add(1);
+                                moveList.Add(1);
+                                moveList.Add(1);
+                                moveList.Add(1);
+                                moveList.Add(1);
                             }
                         }
                                          
@@ -376,7 +380,12 @@ public class GhostController : MonoBehaviour
                                 moveList.Add(2);
                                 moveList.Add(1);
                             } else if(left){
-                                direction = 3;
+                                moveList.Add(3);
+                                moveList.Add(3);
+                                moveList.Add(3);
+                                moveList.Add(3);
+                                moveList.Add(3);
+                                moveList.Add(3);
                             }
                         }
                         break;
