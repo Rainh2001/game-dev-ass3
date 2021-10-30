@@ -94,6 +94,28 @@ public class GhostController : MonoBehaviour
         previousY = posY;
     }
 
+    void getOutOfSpawn(){
+        if(index == 3){
+            moveList.Add(2);
+            moveList.Add(2);
+            moveList.Add(2);
+            moveList.Add(1);
+            moveList.Add(1);
+            moveList.Add(1);
+            moveList.Add(1);
+            moveList.Add(0);
+            moveList.Add(0);
+            moveList.Add(0);
+            moveList.Add(1);
+            moveList.Add(1);
+            moveList.Add(1);
+        } else {
+            moveList.Add(0);
+            moveList.Add(0);
+            moveList.Add(0);
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -126,9 +148,9 @@ public class GhostController : MonoBehaviour
         }
 
         // Ghost Movement AI
-        if(!tweening){
+        if(!tweening && ghostState != GhostState.Dead){
 
-            if(moveList.Count > 0 && (staticGhostState == GhostState.Scared || staticGhostState == GhostState.Recovering)){
+            if(moveList.Count > 0 && (staticGhostState == GhostState.Scared || staticGhostState == GhostState.Recovering) && !MapManager.isSpawnPosition(posX, posY)){
                 moveList.Clear();
             }
 
@@ -143,7 +165,7 @@ public class GhostController : MonoBehaviour
                     case 2: posY++; animator.SetInteger("direction", 3); break;
                     case 3: posX--; animator.SetInteger("direction", 0); break;
                 }
-                StartCoroutine(MoveToSpot(MapManager.getPosition(posX, posY)));
+                StartCoroutine(MoveToSpot(MapManager.getPosition(posX, posY), false));
             } else if(index == 0 || staticGhostState == GhostState.Scared || staticGhostState == GhostState.Recovering){
 
                 // Ghost 1 AI
@@ -180,7 +202,7 @@ public class GhostController : MonoBehaviour
                         case 2: posY++; animator.SetInteger("direction", 3); break;
                         case 3: posX--; animator.SetInteger("direction", 0); break;
                     }
-                    StartCoroutine(MoveToSpot(validPos[rand]));
+                    StartCoroutine(MoveToSpot(validPos[rand], false));
                 } else {
                     stepBack();
                 }
@@ -237,7 +259,7 @@ public class GhostController : MonoBehaviour
                         case 3: posX--; animator.SetInteger("direction", 0); break;
                     }
 
-                    StartCoroutine(MoveToSpot(MapManager.getPosition(posX, posY)));
+                    StartCoroutine(MoveToSpot(MapManager.getPosition(posX, posY), false));
 
 
                 } else {
@@ -277,7 +299,7 @@ public class GhostController : MonoBehaviour
                         case 3: posX--; animator.SetInteger("direction", 0); break;
                     }
 
-                    StartCoroutine(MoveToSpot(MapManager.getPosition(posX, posY)));
+                    StartCoroutine(MoveToSpot(MapManager.getPosition(posX, posY), false));
 
                 } else {
                     stepBack();
@@ -316,13 +338,14 @@ public class GhostController : MonoBehaviour
                                 direction = 2;
                             } else direction = ghost4Direction;  
                         } else {
-                            Debug.Log("Not in position");
                             if(up){
                                 direction = 0;
                             } else if(left){
                                 direction = 3;
                             } else if(down){
-                                direction = 2;
+                                moveList.Add(2);
+                                moveList.Add(2);
+                                moveList.Add(3);
                             } else if(right){
                                 direction = 1;
                             }
@@ -349,7 +372,9 @@ public class GhostController : MonoBehaviour
                             } else if(right){
                                 direction = 1;
                             } else if(down){
-                                direction = 2;
+                                moveList.Add(2);
+                                moveList.Add(2);
+                                moveList.Add(1);
                             } else if(left){
                                 direction = 3;
                             }
@@ -377,7 +402,9 @@ public class GhostController : MonoBehaviour
                             } else if(right){
                                 direction = 1;
                             } else if(up){
-                                direction = 0;
+                                moveList.Add(0);
+                                moveList.Add(0);
+                                moveList.Add(1);
                             } else if(left){
                                 direction = 3;
                             }
@@ -403,7 +430,9 @@ public class GhostController : MonoBehaviour
                             } else if(left){
                                 direction = 3;
                             } else if(up){
-                                direction = 0;
+                                moveList.Add(0);
+                                moveList.Add(0);
+                                moveList.Add(3);
                             } else if(right){
                                 direction = 1;
                             }
@@ -423,7 +452,7 @@ public class GhostController : MonoBehaviour
                 }
 
                 ghost4Direction = direction;
-                StartCoroutine(MoveToSpot(MapManager.getPosition(posX, posY)));
+                StartCoroutine(MoveToSpot(MapManager.getPosition(posX, posY), false));
 
             }
         }
@@ -452,12 +481,18 @@ public class GhostController : MonoBehaviour
             animator.SetInteger("direction", 3);
         }
 
-        StartCoroutine(MoveToSpot(MapManager.getPosition(posX, posY)));
+        StartCoroutine(MoveToSpot(MapManager.getPosition(posX, posY), false));
     }
 
     public static void killedGhost(int ghostIndex){
         ghosts[ghostIndex].animator.SetTrigger("dead");
         ghosts[ghostIndex].ghostState = GhostState.Dead;
+
+        ghosts[ghostIndex].posX = spawnX;
+        ghosts[ghostIndex].posY = spawnY;
+        ghosts[ghostIndex].previousX = spawnX;
+        ghosts[ghostIndex].previousY = spawnY;
+
         ghostDeadCount++;
         ghostDead = true;
         ComponentManager.audioManager.changeMusicState(AudioManager.MusicState.Dead);
@@ -465,8 +500,11 @@ public class GhostController : MonoBehaviour
     }
 
     static IEnumerator ghostRebirth(int ghostIndex){
-        yield return new WaitForSeconds(5);
-        
+        ghosts[ghostIndex].tweening = true;
+        ghosts[ghostIndex].getOutOfSpawn();
+        yield return ghosts[ghostIndex].StartCoroutine(ghosts[ghostIndex].MoveToSpot(MapManager.getPosition(spawnX, spawnY), true));
+        ghosts[ghostIndex].tweening = false;
+
         ghostDeadCount--;
         if(ghostDeadCount == 0){
             ghostDead = false;
@@ -477,8 +515,31 @@ public class GhostController : MonoBehaviour
             }
         }
 
-        ghosts[ghostIndex].animator.SetTrigger("alive");
-        ghosts[ghostIndex].ghostState = GhostState.Alive;
+        switch(staticGhostState){
+            case GhostState.Alive:{
+                ghosts[ghostIndex].animator.SetTrigger("alive");
+                ghosts[ghostIndex].ghostState = GhostState.Alive;   
+                ghosts[ghostIndex].speed = ghosts[ghostIndex].baseSpeed;
+                break;
+            }
+            case GhostState.Scared:{
+                ghosts[ghostIndex].animator.SetTrigger("alive");
+                ghosts[ghostIndex].animator.SetTrigger("scared");
+                ghosts[ghostIndex].ghostState = GhostState.Scared;  
+                ghosts[ghostIndex].speed = 3.0f; 
+                break;
+            }
+            case GhostState.Recovering:{
+                ghosts[ghostIndex].animator.SetTrigger("alive");
+                ghosts[ghostIndex].animator.SetTrigger("scared");
+                ghosts[ghostIndex].animator.SetTrigger("recovering");
+                ghosts[ghostIndex].ghostState = GhostState.Recovering;   
+                ghosts[ghostIndex].speed = 3.0f; 
+                
+                break;
+            }
+        }
+        
 
         yield return null;
     }
@@ -550,19 +611,25 @@ public class GhostController : MonoBehaviour
         ghosts[i].animator.SetTrigger("recovering");
     }
 
-    IEnumerator MoveToSpot(Vector3 position) {
+    IEnumerator MoveToSpot(Vector3 position, bool death) {
         float startTime = Time.time;
         float duration = Vector3.Distance(transform.position, position)/speed;
         float t = 0.0f;
         Vector3 startPos = transform.position;
+        bool cancelled = false;
 
         tweening = true;
         while (t < 1.0f){
+            if(!death && ghostState == GhostState.Dead) {
+                cancelled = true;
+                break;
+            }
             t = (Time.time - startTime)/duration;
             transform.position = Vector3.Lerp(startPos, position, t);
             yield return null;
         }
         
+        if(!cancelled) transform.position = position;
         tweening = false;
         yield return null;
     }
