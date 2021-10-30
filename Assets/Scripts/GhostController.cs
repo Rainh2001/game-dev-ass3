@@ -249,8 +249,40 @@ public class GhostController : MonoBehaviour
 
             } else if(index == 2){
                 // Ghost 3 AI
-                if(inSpawn){
-                    
+                List<int> validDir = new List<int>();
+                for(int i = 0; i < 4; i++){
+                    int newX = posX;
+                    int newY = posY;
+
+                    switch(i){
+                        case 0: newY--; break;
+                        case 1: newX++; break;
+                        case 2: newY++; break;
+                        case 3: newX--; break;
+                    }
+
+                    if(MapManager.isValidPosition(newX, newY) && !MapManager.isSpawnPosition(newX, newY) && !(newX == previousX && newY == previousY)){
+                        validDir.Add(i);
+                    }
+                }
+
+                if(validDir.Count > 0){
+                    int rand = Random.Range(0, validDir.Count);
+                    previousX = posX;
+                    previousY = posY;
+                    int direction = validDir[rand];
+
+                    switch(direction){
+                        case 0: posY--; animator.SetInteger("direction", 1); break;
+                        case 1: posX++; animator.SetInteger("direction", 2); break;
+                        case 2: posY++; animator.SetInteger("direction", 3); break;
+                        case 3: posX--; animator.SetInteger("direction", 0); break;
+                    }
+
+                    StartCoroutine(MoveToSpot(MapManager.getPosition(posX, posY)));
+
+                } else {
+                    stepBack();
                 }
 
             } else if(index == 3){
