@@ -129,9 +129,16 @@ public class GhostController : MonoBehaviour
 
         // Ghost Movement AI
         if(!tweening){
+
+            if(moveList.Count > 0 && (staticGhostState == GhostState.Scared || staticGhostState == GhostState.Recovering)){
+                moveList.Clear();
+            }
+
             if(moveList.Count > 0){
                 int direction = moveList[0];
                 moveList.RemoveAt(0);
+                previousX = posX;
+                previousY = posY;
                 switch(direction){
                     case 0: posY--; animator.SetInteger("direction", 1); break;
                     case 1: posX++; animator.SetInteger("direction", 2); break;
@@ -139,7 +146,8 @@ public class GhostController : MonoBehaviour
                     case 3: posX--; animator.SetInteger("direction", 0); break;
                 }
                 StartCoroutine(MoveToSpot(MapManager.getPosition(posX, posY)));
-            } else if(index == 0){
+            } else if(index == 0 || staticGhostState == GhostState.Scared || staticGhostState == GhostState.Recovering){
+
                 // Ghost 1 AI
                 List<Vector3> validPos = new List<Vector3>();
                 List<int> validDir = new List<int>();
@@ -176,36 +184,68 @@ public class GhostController : MonoBehaviour
                     }
                     StartCoroutine(MoveToSpot(validPos[rand]));
                 } else {
-                    int tempX = previousX;
-                    previousX = posX;
-                    posX = tempX;
-
-                    int tempY = previousY;
-                    previousY = posY;
-                    posY = tempY;
-
-                    int xDiff = posX - previousX;
-                    int yDiff = posY - previousY;
-
-                    if(xDiff == -1){
-                        animator.SetInteger("direction", 0);
-                    } else if(xDiff == 1){
-                        animator.SetInteger("direction", 2);
-                    } else if(yDiff == -1){
-                        animator.SetInteger("direction", 1);
-                    } else if(yDiff == 1){
-                        animator.SetInteger("direction", 3);
-                    }
-
-                    StartCoroutine(MoveToSpot(MapManager.getPosition(posX, posY)));
+                    stepBack();
                 }
                 
 
             } else if(index == 1){
                 // Ghost 2 AI
-                if(inSpawn){
-                    
+                List<List<int>> junctionList = MapManager.getNearestJunctions(posX, posY);
+                float distanceFromPac = Vector3.Distance(transform.position, ComponentManager.pacStudentController.transform.position);
+
+                for(int i = junctionList.Count - 1; i >= 0; i--){
+                    float junctionDistance = Vector3.Distance(ComponentManager.pacStudentController.transform.position, MapManager.getPosition(junctionList[i][0], junctionList[i][1]));
+                    if(junctionDistance > distanceFromPac) junctionList.RemoveAt(i);
                 }
+
+                if(junctionList.Count > 0){
+                    int rand = Random.Range(0, junctionList.Count);
+                    previousX = posX;
+                    previousY = posY;
+
+                    int newX = junctionList[rand][0];
+                    int newY = junctionList[rand][1];
+
+                    int xDiff = newX - posX;
+                    int yDiff = newY - posY;
+
+                    int length = 0;
+                    int direction = 0;
+                    if(xDiff != 0){
+                        length = Mathf.Abs(xDiff);
+                        if(xDiff > 0){
+                            direction = 1;
+                        } else {
+                            direction = 3;
+                        }
+                    }
+                    if(yDiff != 0){
+                        length = Mathf.Abs(yDiff);
+                        if(yDiff > 0){
+                            direction = 2;
+                        } else {
+                            direction = 0;
+                        }
+                    }
+
+                    for(int i = 0; i < length - 1; i++){
+                        moveList.Add(direction);
+                    }
+
+                    switch(direction){
+                        case 0: posY--; animator.SetInteger("direction", 1); break;
+                        case 1: posX++; animator.SetInteger("direction", 2); break;
+                        case 2: posY++; animator.SetInteger("direction", 3); break;
+                        case 3: posX--; animator.SetInteger("direction", 0); break;
+                    }
+
+                    StartCoroutine(MoveToSpot(MapManager.getPosition(posX, posY)));
+
+
+                } else {
+                    stepBack();
+                }
+
 
             } else if(index == 2){
                 // Ghost 3 AI
@@ -222,6 +262,31 @@ public class GhostController : MonoBehaviour
             }
         }
         
+    }
+
+    private void stepBack(){
+        int tempX = previousX;
+        previousX = posX;
+        posX = tempX;
+
+        int tempY = previousY;
+        previousY = posY;
+        posY = tempY;
+
+        int xDiff = posX - previousX;
+        int yDiff = posY - previousY;
+
+        if(xDiff == -1){
+            animator.SetInteger("direction", 0);
+        } else if(xDiff == 1){
+            animator.SetInteger("direction", 2);
+        } else if(yDiff == -1){
+            animator.SetInteger("direction", 1);
+        } else if(yDiff == 1){
+            animator.SetInteger("direction", 3);
+        }
+
+        StartCoroutine(MoveToSpot(MapManager.getPosition(posX, posY)));
     }
 
     public static void killedGhost(int ghostIndex){

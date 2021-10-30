@@ -90,6 +90,53 @@ public class MapManager : MonoBehaviour
         return true;
     }
 
+    public static List<List<int>> getNearestJunctions(int x, int y){
+        List<List<int>> junctions = new List<List<int>>();
+
+        // For each direction
+        for(int i = 0; i < 4; i++){
+            int posX = x;
+            int posY = y;
+
+            switch(i){
+                case 0: posY--; break;
+                case 1: posX++; break;
+                case 2: posY++; break;
+                case 3: posX--; break;
+            }
+
+            while(isValidPosition(posX, posY) && !isSpawnPosition(posX, posY)){
+                
+                if(isJunction(i, posX, posY)){
+                    List<int> list = new List<int>();
+                    list.Add(posX);
+                    list.Add(posY);
+                    junctions.Add(list);
+                }
+
+                switch(i){
+                    case 0: posY--; break;
+                    case 1: posX++; break;
+                    case 2: posY++; break;
+                    case 3: posX--; break;
+                }
+            }
+
+        }
+
+        return junctions;
+    }
+
+    public static bool isJunction(int direction, int x, int y){
+        switch(direction){
+            case 0: return (isValidPosition(x - 1, y) && !isSpawnPosition(x - 1, y)) || (isValidPosition(x + 1, y) && !isSpawnPosition(x + 1, y));
+            case 1: return (isValidPosition(x, y - 1) && !isSpawnPosition(x, y - 1)) || (isValidPosition(x, y + 1) && !isSpawnPosition(x, y + 1));
+            case 2: return (isValidPosition(x - 1, y) && !isSpawnPosition(x - 1, y)) || (isValidPosition(x + 1, y) && !isSpawnPosition(x + 1, y));
+            case 3: return (isValidPosition(x, y - 1) && !isSpawnPosition(x, y - 1)) || (isValidPosition(x, y + 1) && !isSpawnPosition(x, y + 1));
+        }
+        return false;
+    }
+
     public static bool isSpawnPosition(int x, int y){
         return (x >= 11 && x <= 16 && y >= 12 && y <= 16);
     }
