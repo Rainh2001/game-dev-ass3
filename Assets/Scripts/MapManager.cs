@@ -140,4 +140,16 @@ public class MapManager : MonoBehaviour
     public static bool isSpawnPosition(int x, int y){
         return (x >= 11 && x <= 16 && y >= 12 && y <= 16);
     }
+
+    public static string getQuadrant(int x, int y){
+        if(x <= 13){
+            if(y < 14){
+                return "topLeft";
+            } else return "bottomLeft";
+        } else {
+            if(y < 14){
+                return "topRight";
+            } else return "bottomRight";
+        }
+    }
 }
