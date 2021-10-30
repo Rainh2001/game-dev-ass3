@@ -23,6 +23,7 @@ public class GhostController : MonoBehaviour
     private static int ghostDeadCount = 0;
     private static bool ghostDead = false;
     private float speed;
+    private float baseSpeed = 5.0f;
     private bool tweening;
     private bool inSpawn = true;
     private int posX;
@@ -293,9 +294,7 @@ public class GhostController : MonoBehaviour
                 bool left = MapManager.isValidPosition(posX - 1, posY) && !MapManager.isSpawnPosition(posX - 1, posY);
 
                 if(!inPosition){
-                    Debug.Log("!inPosition");
                     if((posX == 1 && posY == 1) || (posX == 26 && posY == 1) || (posX == 26 && posY == 27) || (posX == 1 && posY == 27)){
-                        Debug.Log("In position");
                         inPosition = true;
                     }
                 }
@@ -358,33 +357,57 @@ public class GhostController : MonoBehaviour
                         break;
                     }
                     case "bottomRight": {
-                        if(left && up && down && right){
-                            direction = 2;
-                        } else if(up && !left && down && right){
-                            direction = 1;
-                        } else if(left && down && !right && !up){
-                            direction = 2;
-                        } else if(up && left && !down && !right){
-                            direction = 3;
-                        } else if(up && right && !left && !down){
-                            direction = 0;
-                        } else if(!up && right && left && down){
-                            direction = 3;
-                        } else direction = ghost4Direction;
+                        if(inPosition){
+                            if(left && up && down && right){
+                                direction = 2;
+                            } else if(up && !left && down && right){
+                                direction = 1;
+                            } else if(left && down && !right && !up){
+                                direction = 2;
+                            } else if(up && left && !down && !right){
+                                direction = 3;
+                            } else if(up && right && !left && !down){
+                                direction = 0;
+                            } else if(!up && right && left && down){
+                                direction = 3;
+                            } else direction = ghost4Direction;
+                        } else {
+                            if(down){
+                                direction = 2;
+                            } else if(right){
+                                direction = 1;
+                            } else if(up){
+                                direction = 0;
+                            } else if(left){
+                                direction = 3;
+                            }
+                        }
                         break;
                     }
                     case "bottomLeft": {
-                        if(!up && left && right && down){
-                            direction = 2;
-                        } else if(up && left && !down && !right){
-                            direction = 3;
-                        } else if(up && right && !left && !down){
-                            direction = 0;
-                        } else if(!up && !left && right && down){
-                            direction = 1;
-                        } else if(up && left && down && !right){
-                            direction = 0;
-                        } else direction = ghost4Direction; 
+                        if(inPosition){
+                            if(!up && left && right && down){
+                                direction = 2;
+                            } else if(up && left && !down && !right){
+                                direction = 3;
+                            } else if(up && right && !left && !down){
+                                direction = 0;
+                            } else if(!up && !left && right && down){
+                                direction = 1;
+                            } else if(up && left && down && !right){
+                                direction = 0;
+                            } else direction = ghost4Direction; 
+                        } else {
+                            if(down){
+                                direction = 2;
+                            } else if(left){
+                                direction = 3;
+                            } else if(up){
+                                direction = 0;
+                            } else if(right){
+                                direction = 1;
+                            }
+                        }
                         break;
                     }
                 }
@@ -465,7 +488,7 @@ public class GhostController : MonoBehaviour
         switch(state){
             case GhostState.Alive: {
                 if(!ghostDead) ComponentManager.audioManager.changeMusicState(AudioManager.MusicState.Normal); 
-                inPosition = false;
+                speed = baseSpeed;
                 break;
             }
             case GhostState.Scared: {
@@ -509,14 +532,18 @@ public class GhostController : MonoBehaviour
     private void updateToScared(int i){
         ghosts[i].ghostState = GhostState.Scared;
         ghosts[i].animator.SetTrigger("scared");
+        ghosts[i].speed = 3.0f;
+        ghosts[i].inPosition = false;
     }
     private void updateToAlive(int i){
         ghosts[i].ghostState = GhostState.Alive;
         ghosts[i].animator.SetTrigger("alive");
+        ghosts[i].speed = baseSpeed;
     }
     private void updateToDead(int i){
         ghosts[i].ghostState = GhostState.Dead;
         ghosts[i].animator.SetTrigger("dead");
+        ghosts[i].speed = baseSpeed;
     }
     private void updateToRecovering(int i){
         ghosts[i].ghostState = GhostState.Recovering;
