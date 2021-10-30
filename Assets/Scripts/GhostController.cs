@@ -22,13 +22,78 @@ public class GhostController : MonoBehaviour
 
     private static int ghostDeadCount = 0;
     private static bool ghostDead = false;
-
+    private float speed;
+    private bool tweening;
+    private bool inSpawn = true;
+    private int posX;
+    private int posY;
+    private int previousX;
+    private int previousY;
+    private static int spawnX = 13;
+    private static int spawnY = 14;
+    private List<int> moveList = new List<int>();
 
     void Awake(){
         index = int.Parse(gameObject.tag[gameObject.tag.Length - 1] + "") - 1;
         ghosts[index] = this;
         if(index == 0) ComponentManager.ghostController = this;
         animator = gameObject.GetComponent<Animator>();
+        speed = 5.0f;   
+        tweening = false;
+        inSpawn = true;
+        posY = spawnY;
+        switch(index){
+            case 0: {
+                posX = spawnX - 1; 
+                moveList.Add(0);
+                moveList.Add(1);
+                moveList.Add(0);
+                moveList.Add(0);
+                break;
+            }
+            case 1: {
+                posX = spawnX; 
+                moveList.Add(0);
+                moveList.Add(0);
+                moveList.Add(0);
+                break;
+            }
+            case 2: {
+                posX = spawnX + 1; 
+                moveList.Add(0);
+                moveList.Add(0);
+                moveList.Add(0);
+                break;
+            }
+            case 3: {
+                posX = spawnX + 2; 
+                moveList.Add(2);
+                moveList.Add(3);
+                moveList.Add(2);
+                moveList.Add(2);
+                moveList.Add(3);
+                moveList.Add(3);
+                moveList.Add(2);
+                moveList.Add(2);
+                moveList.Add(2);
+                moveList.Add(3);
+                moveList.Add(3);
+                moveList.Add(3);
+                moveList.Add(2);
+                moveList.Add(2);
+                moveList.Add(2);
+                moveList.Add(3);
+                moveList.Add(3);
+                moveList.Add(3);
+                moveList.Add(2);
+                moveList.Add(2);
+                moveList.Add(2);
+                moveList.Add(2);
+                break;
+            }
+        }
+        previousX = posX;
+        previousY = posY;
     }
 
     // Start is called before the first frame update
@@ -40,6 +105,7 @@ public class GhostController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Ghost Management, not a good way to do it, however it works and im happy with that lol
         if(index == 0){
             if(staticGhostState == GhostState.Scared && timerCounter < 10){
                 ComponentManager.uIManager.ghostTimerText.gameObject.SetActive(true);
@@ -58,6 +124,101 @@ public class GhostController : MonoBehaviour
                 staticGhostState = GhostState.Alive;
                 updateGhostState(GhostState.Alive);
                 timerActive = false;
+            }
+        }
+
+        // Ghost Movement AI
+        if(!tweening){
+            if(moveList.Count > 0){
+                int direction = moveList[0];
+                moveList.RemoveAt(0);
+                switch(direction){
+                    case 0: posY--; animator.SetInteger("direction", 1); break;
+                    case 1: posX++; animator.SetInteger("direction", 2); break;
+                    case 2: posY++; animator.SetInteger("direction", 3); break;
+                    case 3: posX--; animator.SetInteger("direction", 0); break;
+                }
+                StartCoroutine(MoveToSpot(MapManager.getPosition(posX, posY)));
+            } else if(index == 0){
+                // Ghost 1 AI
+                List<Vector3> validPos = new List<Vector3>();
+                List<int> validDir = new List<int>();
+                float distanceFromPac = Vector3.Distance(transform.position, ComponentManager.pacStudentController.transform.position);
+
+                for(int i = 0; i < 4; i++){
+                    int newX = posX;
+                    int newY = posY;
+                    switch(i){
+                        case 0: newY--; break;
+                        case 1: newX++; break;
+                        case 2: newY++; break;
+                        case 3: newX--; break;
+                    }
+                    if(MapManager.isValidPosition(newX, newY) && !MapManager.isSpawnPosition(newX, newY)){
+                        Vector3 newPos = MapManager.getPosition(newX, newY);
+                        float newDistanceFromPac = Vector3.Distance(newPos, ComponentManager.pacStudentController.transform.position);
+                        if(newDistanceFromPac >= distanceFromPac){
+                            validPos.Add(newPos);
+                            validDir.Add(i);
+                        }
+                    }
+                }
+
+                if(validDir.Count > 0){
+                    int rand = Random.Range(0, validPos.Count);
+                    previousX = posX;
+                    previousY = posY;
+                    switch(validDir[rand]){
+                        case 0: posY--; animator.SetInteger("direction", 1); break;
+                        case 1: posX++; animator.SetInteger("direction", 2); break;
+                        case 2: posY++; animator.SetInteger("direction", 3); break;
+                        case 3: posX--; animator.SetInteger("direction", 0); break;
+                    }
+                    StartCoroutine(MoveToSpot(validPos[rand]));
+                } else {
+                    int tempX = previousX;
+                    previousX = posX;
+                    posX = tempX;
+
+                    int tempY = previousY;
+                    previousY = posY;
+                    posY = tempY;
+
+                    int xDiff = posX - previousX;
+                    int yDiff = posY - previousY;
+
+                    if(xDiff == -1){
+                        animator.SetInteger("direction", 0);
+                    } else if(xDiff == 1){
+                        animator.SetInteger("direction", 2);
+                    } else if(yDiff == -1){
+                        animator.SetInteger("direction", 1);
+                    } else if(yDiff == 1){
+                        animator.SetInteger("direction", 3);
+                    }
+
+                    StartCoroutine(MoveToSpot(MapManager.getPosition(posX, posY)));
+                }
+                
+
+            } else if(index == 1){
+                // Ghost 2 AI
+                if(inSpawn){
+                    
+                }
+
+            } else if(index == 2){
+                // Ghost 3 AI
+                if(inSpawn){
+                    
+                }
+
+            } else if(index == 3){
+                // Ghost 4 AI
+                if(inSpawn){
+                    
+                }
+
             }
         }
         
@@ -151,5 +312,22 @@ public class GhostController : MonoBehaviour
     private void updateToRecovering(int i){
         ghosts[i].ghostState = GhostState.Recovering;
         ghosts[i].animator.SetTrigger("recovering");
+    }
+
+    IEnumerator MoveToSpot(Vector3 position) {
+        float startTime = Time.time;
+        float duration = Vector3.Distance(transform.position, position)/speed;
+        float t = 0.0f;
+        Vector3 startPos = transform.position;
+
+        tweening = true;
+        while (t < 1.0f){
+            t = (Time.time - startTime)/duration;
+            transform.position = Vector3.Lerp(startPos, position, t);
+            yield return null;
+        }
+        
+        tweening = false;
+        yield return null;
     }
 }

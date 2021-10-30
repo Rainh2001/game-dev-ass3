@@ -89,4 +89,8 @@ public class MapManager : MonoBehaviour
         map[y][x] = 0;
         return true;
     }
+
+    public static bool isSpawnPosition(int x, int y){
+        return (x >= 11 && x <= 16 && y >= 12 && y <= 16);
+    }
 }

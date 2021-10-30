@@ -189,7 +189,7 @@ public class PacStudentController : MonoBehaviour
             particle.Play();
             transform.position = position;
         }
-        
+        // Debug.Log(posX + " " + posY);
         tweening = false;
         yield return null;
     }
