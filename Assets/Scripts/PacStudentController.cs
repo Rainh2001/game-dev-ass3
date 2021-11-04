@@ -40,7 +40,10 @@ public class PacStudentController : MonoBehaviour
     public enum AbilityState { None, Skull, Blink, Speed }
     public AbilityState abilityState;
 
+    private bool hasMoved = false;
+
     void Awake(){
+        hasMoved = false;
         abilityState = AbilityState.None;
         ComponentManager.pacStudentController = this;
         pelletsEaten = 0;
@@ -175,7 +178,6 @@ public class PacStudentController : MonoBehaviour
             }
 
             if(MapManager.isValidPosition(newX, newY)){
-
                 if(MapManager.isPellet(newX, newY)){
                     audioSource.clip = movingAndEating;
                 } else {
@@ -196,9 +198,10 @@ public class PacStudentController : MonoBehaviour
                 posY = newY;
                 animator.SetInteger("direction", direction);
                 StartCoroutine(MoveToSpot(MapManager.getPosition(newX, newY)));
+                hasMoved = true;
                 playing = true;
                 collided = false;
-            } else {
+            } else if(hasMoved) {
                 newX = posX;
                 newY = posY;
 
@@ -210,6 +213,7 @@ public class PacStudentController : MonoBehaviour
                 }
 
                 if(MapManager.isValidPosition(newX, newY)){
+
                     if(MapManager.isPellet(newX, newY)){
                         audioSource.clip = movingAndEating;
                     } else {

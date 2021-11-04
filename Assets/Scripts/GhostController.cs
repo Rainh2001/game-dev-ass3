@@ -40,14 +40,28 @@ public class GhostController : MonoBehaviour
     private ParticleSystem fastParticle;
 
     void Awake(){
-        index = int.Parse(gameObject.tag[gameObject.tag.Length - 1] + "") - 1;
-        ghosts[index] = this;
-        if(index == 0) ComponentManager.ghostController = this;
-        animator = gameObject.GetComponent<Animator>();
-        speed = 5.0f;   
+        ghost4Direction = 0;
+        inPosition = true;
+        spawnX = 13;
+        spawnY = 14;
+        moveList = new List<int>();
+        baseSpeed = 5.0f;
+        ghostDead = false;
+        ghostDeadCount = 0;
+        timerActive = false;
+        ghostState = GhostState.Alive;
+        speed = baseSpeed;   
         tweening = false;
         posY = spawnY;
         inPosition = true;
+
+
+        index = int.Parse(gameObject.tag[gameObject.tag.Length - 1] + "") - 1;
+        Debug.Log(index);
+        ghosts[index] = this;
+        if(index == 0) ComponentManager.ghostController = this;
+        animator = gameObject.GetComponent<Animator>();
+        
 
         foreach(Transform tr in transform){
             if(tr.tag == "SlowParticle"){

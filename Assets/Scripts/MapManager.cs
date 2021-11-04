@@ -13,6 +13,7 @@ public class MapManager : MonoBehaviour
     public Vector3 center;
 
     void Awake(){
+        map = new List<List<int>>();
         topLeftTile = GameObject.FindGameObjectWithTag("FirstTile");
         tileSize = topLeftTile.GetComponent<SpriteRenderer>().bounds.size.x;
         mapStart = topLeftTile.transform.position;
@@ -62,6 +63,7 @@ public class MapManager : MonoBehaviour
         }
 
         center = getPosition(map[0].Count/2, map.Count/2);
+        map[1][1] = 0;
     }
 
     public static Vector3 getPosition(int x, int y){
@@ -76,7 +78,6 @@ public class MapManager : MonoBehaviour
         if(x < 0 || y < 0 || x >= map[0].Count || y >= map.Count) return false;
         int tile = map[y][x];
         if(tile != 0 && tile != 5 && tile != 6) return false;
-
         return true;
     }
 
