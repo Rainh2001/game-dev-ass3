@@ -41,7 +41,7 @@ public class PacStudentController : MonoBehaviour
     public AbilityState abilityState;
 
     void Awake(){
-        abilityState = AbilityState.Blink;
+        abilityState = AbilityState.None;
         ComponentManager.pacStudentController = this;
         pelletsEaten = 0;
         GameObject[] pelletGO = GameObject.FindGameObjectsWithTag("Pellet");
