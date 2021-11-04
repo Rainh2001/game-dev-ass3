@@ -89,8 +89,35 @@ public class PacStudentController : MonoBehaviour
         }
 
         if(SceneManager.GetActiveScene().buildIndex == 2 && Input.GetKeyDown(KeyCode.Space)){
-            abilityState = AbilityState.None;
-            ComponentManager.uIManager.updateAbility();
+            if(abilityState != AbilityState.None){
+                GhostController.baseSpeed += .3f;
+                GhostController.updateBaseSpeed();
+                switch(abilityState){
+                    case AbilityState.Skull: {
+                        for(int i = 0; i < 4; i++){
+                            GhostController.GhostState ghost = GhostController.ghosts[i].ghostState;
+                            if(ghost == GhostController.GhostState.Alive || ghost == GhostController.GhostState.Scared || ghost == GhostController.GhostState.Recovering){
+                                UIManager.score += 300;
+                                GhostController.killedGhost(i);
+                            }
+                            
+                        }
+                        break;
+                    }
+                    case AbilityState.Blink: {
+                        break;
+                    }
+                    case AbilityState.Speed: {
+                        break;
+                    }
+                }
+
+
+                abilityState = AbilityState.None;
+                ComponentManager.uIManager.updateAbility();
+            }
+
+            
         }
 
         if(!tweening && initialized && !teleporting && pacState == PacState.Alive && !UIManager.countingDown){

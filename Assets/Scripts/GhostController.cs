@@ -23,7 +23,7 @@ public class GhostController : MonoBehaviour
     private static int ghostDeadCount = 0;
     private static bool ghostDead = false;
     private float speed;
-    private float baseSpeed = 5.0f;
+    public static float baseSpeed = 5.0f;
     private bool tweening;
     private int posX;
     private int posY;
@@ -415,7 +415,11 @@ public class GhostController : MonoBehaviour
                                 moveList.Add(0);
                                 moveList.Add(1);
                             } else if(left){
-                                direction = 3;
+                                moveList.Add(3);
+                                moveList.Add(3);
+                                moveList.Add(3);
+                                moveList.Add(3);
+                                moveList.Add(3);
                             }
                         }
                         break;
@@ -443,7 +447,11 @@ public class GhostController : MonoBehaviour
                                 moveList.Add(0);
                                 moveList.Add(3);
                             } else if(right){
-                                direction = 1;
+                                moveList.Add(1);
+                                moveList.Add(1);
+                                moveList.Add(1);
+                                moveList.Add(1);
+                                moveList.Add(1);
                             }
                         }
                         break;
@@ -494,6 +502,10 @@ public class GhostController : MonoBehaviour
     }
 
     public static void killedGhost(int ghostIndex){
+        if(ghosts[ghostIndex].ghostState == GhostState.Alive){
+            ghosts[ghostIndex].animator.SetTrigger("scared");
+        }
+        ghosts[ghostIndex].moveList.Clear();
         ghosts[ghostIndex].animator.SetTrigger("dead");
         ghosts[ghostIndex].ghostState = GhostState.Dead;
 
@@ -528,7 +540,7 @@ public class GhostController : MonoBehaviour
             case GhostState.Alive:{
                 ghosts[ghostIndex].animator.SetTrigger("alive");
                 ghosts[ghostIndex].ghostState = GhostState.Alive;   
-                ghosts[ghostIndex].speed = ghosts[ghostIndex].baseSpeed;
+                ghosts[ghostIndex].speed = baseSpeed;
                 break;
             }
             case GhostState.Scared:{
@@ -618,6 +630,14 @@ public class GhostController : MonoBehaviour
     private void updateToRecovering(int i){
         ghosts[i].ghostState = GhostState.Recovering;
         ghosts[i].animator.SetTrigger("recovering");
+    }
+
+    public static void updateBaseSpeed(){
+        for(int i = 0; i < 4; i++){
+            if(ghosts[i].ghostState == GhostState.Alive){
+                ghosts[i].speed = baseSpeed;
+            }
+        }
     }
 
     IEnumerator MoveToSpot(Vector3 position, bool death) {
