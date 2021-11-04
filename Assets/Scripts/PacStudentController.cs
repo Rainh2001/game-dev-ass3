@@ -333,7 +333,7 @@ public class PacStudentController : MonoBehaviour
         } else if(other.tag == "Power_Pellet"){
 
             if(SceneManager.GetActiveScene().buildIndex == 2){
-                GhostController.baseSpeed *= 1.075f;
+                GhostController.baseSpeed *= 1.1f;
                 GhostController.updateBaseSpeed();
             }
 
