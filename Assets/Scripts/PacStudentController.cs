@@ -91,8 +91,6 @@ public class PacStudentController : MonoBehaviour
 
         if(SceneManager.GetActiveScene().buildIndex == 2 && Input.GetKeyDown(KeyCode.Space)){
             if(abilityState != AbilityState.None && pacState != PacState.Dead){
-                GhostController.baseSpeed *= 1.075f;
-                GhostController.updateBaseSpeed();
                 bool changed = false;
                 switch(abilityState){
                     case AbilityState.Skull: {
@@ -330,6 +328,8 @@ public class PacStudentController : MonoBehaviour
 
         } else if(other.tag == "Power_Pellet"){
             ComponentManager.ghostController.updateGhostState(GhostController.GhostState.Scared);
+            GhostController.baseSpeed *= 1.075f;
+            GhostController.updateBaseSpeed();
             pelletsEaten++;
             Destroy(other.gameObject);
         }
