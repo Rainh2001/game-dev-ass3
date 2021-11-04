@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PacStudentController : MonoBehaviour
 {
@@ -35,7 +36,11 @@ public class PacStudentController : MonoBehaviour
     private enum PacState { Alive, Dead }
     private PacState pacState = PacState.Alive;
 
+    public enum AbilityState { None, Skull, Blink, Speed }
+    public AbilityState abilityState;
+
     void Awake(){
+        abilityState = AbilityState.None;
         ComponentManager.pacStudentController = this;
         pelletsEaten = 0;
         GameObject[] pelletGO = GameObject.FindGameObjectsWithTag("Pellet");
@@ -81,6 +86,11 @@ public class PacStudentController : MonoBehaviour
         } else if(Input.GetKeyDown(KeyCode.D)){
             lastInput = KeyCode.D;
             initialized = true;
+        }
+
+        if(SceneManager.GetActiveScene().buildIndex == 2 && Input.GetKeyDown(KeyCode.Space)){
+            abilityState = AbilityState.None;
+            ComponentManager.uIManager.updateAbility();
         }
 
         if(!tweening && initialized && !teleporting && pacState == PacState.Alive && !UIManager.countingDown){
@@ -230,6 +240,19 @@ public class PacStudentController : MonoBehaviour
                     UIManager.score += 300;
                     int index = int.Parse(other.tag[other.tag.Length-1] + "") - 1;
                     GhostController.killedGhost(index);
+
+                    if(SceneManager.GetActiveScene().buildIndex == 2){
+                        List<int> availableAbilities = new List<int>();
+
+                        for(int i = 1; i <= 3; i++){
+                            if((int)abilityState != i) availableAbilities.Add(i);
+                        }
+
+                        int rand = UnityEngine.Random.Range(0, availableAbilities.Count);
+                        abilityState = (AbilityState)availableAbilities[rand];
+                        ComponentManager.uIManager.updateAbility();
+                    }
+                    
                 }
                 
             }

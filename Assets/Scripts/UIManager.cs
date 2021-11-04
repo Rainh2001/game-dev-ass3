@@ -29,7 +29,16 @@ public class UIManager : MonoBehaviour
     public static bool gameOver = false;
     private bool gameOverInitialized = false;
 
+    public GameObject abilityPanel;
+
+    public GameObject skullAbility;
+    public GameObject blinkAbility;
+    public GameObject speedDownAbility;
+
+    private PacStudentController.AbilityState abilityNum;
+
     private void Awake() {
+        abilityNum = 0;
         gameOver = false;
         gameOverInitialized = false;
         countingDown = true;
@@ -41,6 +50,7 @@ public class UIManager : MonoBehaviour
         ComponentManager.uIManager = this;
         ghostTimerText.text = "";
         Time.timeScale = 0.0f;
+
     }
 
     // Start is called before the first frame update
@@ -123,5 +133,45 @@ public class UIManager : MonoBehaviour
         if(lives == 0){
             gameOver = true;
         }
+    }
+
+    public void updateAbility(){
+        PacStudentController.AbilityState newAbility = ComponentManager.pacStudentController.abilityState;
+
+        if(newAbility != abilityNum){
+            
+            foreach(Transform child in abilityPanel.transform){
+                GameObject.Destroy(child.gameObject);
+            }
+
+            
+            switch(newAbility){
+                case PacStudentController.AbilityState.Skull: {
+                    GameObject ability = Instantiate(skullAbility, Vector3.zero, Quaternion.identity);
+                    ability.transform.parent = abilityPanel.transform;
+                    ability.transform.position = abilityPanel.transform.position;
+                    ability.transform.localScale = new Vector3(25.0f, 25.0f, 25.0f);
+                    break;
+                }
+                case PacStudentController.AbilityState.Blink: {
+                    GameObject ability = Instantiate(blinkAbility, Vector3.zero, Quaternion.identity);
+                    ability.transform.parent = abilityPanel.transform;
+                    ability.transform.position = abilityPanel.transform.position;
+                    ability.transform.localScale = new Vector3(25.0f, 25.0f, 25.0f);
+                    break;
+                }
+                case PacStudentController.AbilityState.Speed: {
+                    GameObject ability = Instantiate(speedDownAbility, Vector3.zero, Quaternion.identity);
+                    ability.transform.parent = abilityPanel.transform;
+                    ability.transform.position = abilityPanel.transform.position;
+                    ability.transform.localScale = new Vector3(25.0f, 25.0f, 25.0f);
+                    break;
+                }
+            }
+
+            abilityNum = newAbility;
+
+        }
+
     }
 }
