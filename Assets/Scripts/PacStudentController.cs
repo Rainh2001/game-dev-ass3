@@ -327,9 +327,13 @@ public class PacStudentController : MonoBehaviour
             }
 
         } else if(other.tag == "Power_Pellet"){
+
+            if(SceneManager.GetActiveScene().buildIndex == 2){
+                GhostController.baseSpeed *= 1.075f;
+                GhostController.updateBaseSpeed();
+            }
+
             ComponentManager.ghostController.updateGhostState(GhostController.GhostState.Scared);
-            GhostController.baseSpeed *= 1.075f;
-            GhostController.updateBaseSpeed();
             pelletsEaten++;
             Destroy(other.gameObject);
         }

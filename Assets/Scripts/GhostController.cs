@@ -192,7 +192,7 @@ public class GhostController : MonoBehaviour
                         case 2: newY++; break;
                         case 3: newX--; break;
                     }
-                    if(MapManager.isValidPosition(newX, newY) && !MapManager.isSpawnPosition(newX, newY)){
+                    if(MapManager.isValidPosition(newX, newY) && !MapManager.isSpawnPosition(newX, newY) && !(newX == 27 && newY == 14) && !(newX == 0 && newY == 14)){
                         Vector3 newPos = MapManager.getPosition(newX, newY);
                         float newDistanceFromPac = Vector3.Distance(newPos, ComponentManager.pacStudentController.transform.position);
                         if(newDistanceFromPac >= distanceFromPac){

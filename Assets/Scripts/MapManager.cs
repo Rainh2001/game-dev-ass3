@@ -74,7 +74,6 @@ public class MapManager : MonoBehaviour
 
     public static bool isValidPosition(int x, int y){
         if(x < 0 || y < 0 || x >= map[0].Count || y >= map.Count) return false;
-
         int tile = map[y][x];
         if(tile != 0 && tile != 5 && tile != 6) return false;
 
