@@ -23,6 +23,8 @@ TagManager:
   - Enemy3
   - Enemy4
   - Audio
+  - SlowParticle
+  - FastParticle
   layers:
   - Default
   - TransparentFX

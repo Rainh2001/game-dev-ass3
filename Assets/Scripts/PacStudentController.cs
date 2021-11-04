@@ -40,7 +40,7 @@ public class PacStudentController : MonoBehaviour
     public AbilityState abilityState;
 
     void Awake(){
-        abilityState = AbilityState.None;
+        abilityState = AbilityState.Speed;
         ComponentManager.pacStudentController = this;
         pelletsEaten = 0;
         GameObject[] pelletGO = GameObject.FindGameObjectsWithTag("Pellet");
@@ -89,7 +89,7 @@ public class PacStudentController : MonoBehaviour
         }
 
         if(SceneManager.GetActiveScene().buildIndex == 2 && Input.GetKeyDown(KeyCode.Space)){
-            if(abilityState != AbilityState.None){
+            if(abilityState != AbilityState.None && pacState != PacState.Dead){
                 GhostController.baseSpeed += .3f;
                 GhostController.updateBaseSpeed();
                 switch(abilityState){
@@ -108,6 +108,7 @@ public class PacStudentController : MonoBehaviour
                         break;
                     }
                     case AbilityState.Speed: {
+                        GhostController.slowGhosts();
                         break;
                     }
                 }

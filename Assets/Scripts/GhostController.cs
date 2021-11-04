@@ -36,6 +36,8 @@ public class GhostController : MonoBehaviour
     private int ghost4Direction = 0;
     private bool inPosition = true;
 
+    private ParticleSystem slowParticle;
+    private ParticleSystem fastParticle;
 
     void Awake(){
         index = int.Parse(gameObject.tag[gameObject.tag.Length - 1] + "") - 1;
@@ -46,6 +48,15 @@ public class GhostController : MonoBehaviour
         tweening = false;
         posY = spawnY;
         inPosition = true;
+
+        foreach(Transform tr in transform){
+            if(tr.tag == "SlowParticle"){
+                slowParticle = tr.GetComponent<ParticleSystem>();
+            } else if(tr.tag == "FastParticle"){
+                fastParticle = tr.GetComponent<ParticleSystem>();
+            }
+        }
+
         switch(index){
             case 0: {
                 posX = spawnX - 1; 
@@ -660,6 +671,29 @@ public class GhostController : MonoBehaviour
         
         if(!cancelled) transform.position = position;
         tweening = false;
+        yield return null;
+    }
+
+    public static void slowGhosts(){
+        for(int i = 0; i < 4; i++){
+            ghosts[i].StartCoroutine(ghosts[i].slowEffect());
+        }
+    }
+
+    IEnumerator slowEffect(){
+        speed = 2.0f;
+        slowParticle.Play();
+
+        yield return new WaitForSeconds(5);
+
+        if(ghostState == GhostState.Alive){
+            speed = baseSpeed;
+        } else {
+            speed = 3.0f;
+        }
+
+        fastParticle.Play();
+
         yield return null;
     }
 }
