@@ -90,13 +90,13 @@ public class PacStudentController : MonoBehaviour
 
         if(SceneManager.GetActiveScene().buildIndex == 2 && Input.GetKeyDown(KeyCode.Space)){
             if(abilityState != AbilityState.None && pacState != PacState.Dead){
-                GhostController.baseSpeed += .3f;
+                GhostController.baseSpeed *= 1.1f;
                 GhostController.updateBaseSpeed();
                 switch(abilityState){
                     case AbilityState.Skull: {
                         for(int i = 0; i < 4; i++){
                             GhostController.GhostState ghost = GhostController.ghosts[i].ghostState;
-                            if(ghost == GhostController.GhostState.Alive || ghost == GhostController.GhostState.Scared || ghost == GhostController.GhostState.Recovering){
+                            if(ghost != GhostController.GhostState.Dead){
                                 UIManager.score += 300;
                                 GhostController.killedGhost(i);
                             }
@@ -112,7 +112,6 @@ public class PacStudentController : MonoBehaviour
                         break;
                     }
                 }
-
 
                 abilityState = AbilityState.None;
                 ComponentManager.uIManager.updateAbility();
