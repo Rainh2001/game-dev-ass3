@@ -32,6 +32,7 @@ public class PacStudentController : MonoBehaviour
 
     private bool teleporting = false;
     private GhostController ghostController;
+    private bool blinked = false;
 
     private enum PacState { Alive, Dead }
     private PacState pacState = PacState.Alive;
@@ -40,7 +41,7 @@ public class PacStudentController : MonoBehaviour
     public AbilityState abilityState;
 
     void Awake(){
-        abilityState = AbilityState.Speed;
+        abilityState = AbilityState.Blink;
         ComponentManager.pacStudentController = this;
         pelletsEaten = 0;
         GameObject[] pelletGO = GameObject.FindGameObjectsWithTag("Pellet");
@@ -90,8 +91,9 @@ public class PacStudentController : MonoBehaviour
 
         if(SceneManager.GetActiveScene().buildIndex == 2 && Input.GetKeyDown(KeyCode.Space)){
             if(abilityState != AbilityState.None && pacState != PacState.Dead){
-                GhostController.baseSpeed *= 1.1f;
+                GhostController.baseSpeed *= 1.075f;
                 GhostController.updateBaseSpeed();
+                bool changed = false;
                 switch(abilityState){
                     case AbilityState.Skull: {
                         for(int i = 0; i < 4; i++){
@@ -105,6 +107,39 @@ public class PacStudentController : MonoBehaviour
                         break;
                     }
                     case AbilityState.Blink: {
+
+                        int newX = posX;
+                        int newY = posY;
+                        int xChange = 0;
+                        int yChange = 0;
+
+                        switch(lastInput){
+                            case KeyCode.W: yChange = -1; break;
+                            case KeyCode.A: xChange = -1; break;
+                            case KeyCode.S: yChange = 1; break;
+                            case KeyCode.D: xChange = 1; break;
+                            default: xChange = 1; break;
+                        }
+
+                        for(int i = 0; i < 7; i++){
+                            newX += xChange;
+                            newY += yChange;
+                            if(!MapManager.isValidPosition(newX, newY)){
+                                newX -= xChange;
+                                newY -= yChange;
+                                break;
+                            }
+
+                            changed = true;
+                        }
+
+                        if(changed){
+                            blinked = true;
+                            posX = newX;
+                            posY = newY;
+                            transform.position = MapManager.getPosition(posX, posY);
+                        }
+                        
                         break;
                     }
                     case AbilityState.Speed: {
@@ -113,8 +148,16 @@ public class PacStudentController : MonoBehaviour
                     }
                 }
 
-                abilityState = AbilityState.None;
-                ComponentManager.uIManager.updateAbility();
+                if(abilityState == AbilityState.Blink){
+                    if(changed){
+                        abilityState = AbilityState.None;
+                        ComponentManager.uIManager.updateAbility();
+                    }
+                } else {
+                    abilityState = AbilityState.None;
+                    ComponentManager.uIManager.updateAbility();
+                }
+                
             }
 
             
@@ -216,17 +259,18 @@ public class PacStudentController : MonoBehaviour
 
         tweening = true;
         while (t < 1.0f){
-            if(teleporting || pacState == PacState.Dead) break;
+            if(teleporting || pacState == PacState.Dead || blinked) break;
             t = (Time.time - startTime)/duration;
             transform.position = Vector3.Lerp(startPos, position, t);
             yield return null;
         }
 
-        if(!teleporting && pacState != PacState.Dead){
+        if(!teleporting && pacState != PacState.Dead && !blinked){
             particle.Play();
             transform.position = position;
         }
         // Debug.Log(posX + " " + posY);
+        blinked = false;
         tweening = false;
         yield return null;
     }
