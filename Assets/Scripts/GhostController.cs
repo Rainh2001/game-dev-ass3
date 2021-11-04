@@ -58,7 +58,6 @@ public class GhostController : MonoBehaviour
 
 
         index = int.Parse(gameObject.tag[gameObject.tag.Length - 1] + "") - 1;
-        Debug.Log(index);
         ghosts[index] = this;
         if(index == 0) ComponentManager.ghostController = this;
         animator = gameObject.GetComponent<Animator>();
