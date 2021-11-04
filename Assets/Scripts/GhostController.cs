@@ -54,6 +54,7 @@ public class GhostController : MonoBehaviour
         tweening = false;
         posY = spawnY;
         inPosition = true;
+        staticGhostState = GhostState.Alive;
 
 
         index = int.Parse(gameObject.tag[gameObject.tag.Length - 1] + "") - 1;
